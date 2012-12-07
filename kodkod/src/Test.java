@@ -1,9 +1,10 @@
 import java.util.Arrays;
 import java.util.List;
+
+import kodkod.arithmetic.IntExprReduction;
 import kodkod.ast.*;
 import kodkod.ast.operator.*;
 import kodkod.instance.*;
-import kodkod.smt.IntExprReduction;
 import kodkod.engine.*;
 import kodkod.engine.satlab.SATFactory;
 import kodkod.engine.config.Options;

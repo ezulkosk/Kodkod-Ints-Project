@@ -1,4 +1,4 @@
-package kodkod.smt;
+package kodkod.arithmetic;
 
 public class TemporaryTuple {
 	Object left;

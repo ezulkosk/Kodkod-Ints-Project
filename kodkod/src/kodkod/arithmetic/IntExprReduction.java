@@ -1,4 +1,4 @@
-package kodkod.smt;
+package kodkod.arithmetic;
 
 import java.util.ArrayList;
 import java.util.Arrays;

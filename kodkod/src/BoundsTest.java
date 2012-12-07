@@ -2,6 +2,7 @@
 import java.util.Arrays;
 import java.util.List;
 
+import kodkod.arithmetic.IntExprReduction;
 import kodkod.ast.Decls;
 import kodkod.ast.Expression;
 import kodkod.ast.Formula;
@@ -14,7 +15,6 @@ import kodkod.instance.Bounds;
 import kodkod.instance.TupleFactory;
 import kodkod.instance.TupleSet;
 import kodkod.instance.Universe;
-import kodkod.smt.IntExprReduction;
 
 /* 
   ==================================================
