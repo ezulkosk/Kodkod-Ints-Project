@@ -15,6 +15,22 @@ import kodkod.instance.TupleFactory;
 import kodkod.instance.TupleSet;
 import kodkod.instance.Universe;
 
+/* Alloy Input:
+sig Test 
+{  
+	x: Int,
+	y: Int,
+	z: Int,
+	weight: Int,
+}
+{ 
+	weight = x.plus[y].plus[z]
+	weight < 4
+	weight > -2
+} 
+run Pred for exactly 1 Test, 4 Int
+ */
+
 /* 
   ==================================================
     kodkod formula: 
@@ -291,7 +307,7 @@ Formula x84=x10.eq(x10);
 IntExprReduction ier = new IntExprReduction();
 Formula[] formulas = ier.reduceIntExpressions(x12, x20, x23, x30, x32, x39, x41, x48, x50, x74, x75, x76, x77, x78, x79, x80, x81, x82, x83, x84);
 Formula x11=Formula.compose(FormulaOperator.AND, formulas);
-ier.solve(x11, bounds, factory, universe); 
+ier.solve(x11, bounds, factory, universe, 4); 
 
 
 

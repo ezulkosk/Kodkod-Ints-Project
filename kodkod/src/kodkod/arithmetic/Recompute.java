@@ -13,6 +13,7 @@ import kodkod.ast.ExprToIntCast;
 import kodkod.ast.IntToExprCast;
 import kodkod.ast.Node;
 import kodkod.ast.Relation;
+import kodkod.ast.Node.Reduction;
 import kodkod.engine.Solution;
 import kodkod.instance.Instance;
 import kodkod.instance.Tuple;
@@ -48,6 +49,8 @@ public class Recompute {
 		
 		for(ComparisonFormula cf: formulas)
 		{
+			if(cf.reduction != Reduction.DELETE)
+				continue;
 			tempTuples.add(computeByType(cf.right()));
 			System.out.println(-10%16 + " " + -18%16);
 			bogusRelations.add((Relation)((BinaryExpression)cf.left()).right());
@@ -116,7 +119,7 @@ public class Recompute {
 				newInstance.add(bogusRelations.get(i), newTupleSet);		
 			}
 		}
-		System.out.println(newInstance);
+		//System.out.println(newInstance);
 		return new Solution(oldSolution.outcome(), oldSolution.stats(), newInstance, oldSolution.proof());
 	}
 	
@@ -147,7 +150,13 @@ public class Recompute {
 		//might need something like this
 		//if(bogusVariables.contains(f.right()))
 		//	System.out.println("Error Here");
-		TupleSet ts = relationTuples.get(f.right());
+		
+		TupleSet ts;
+		//TODO claferhack, needs to be fixed
+		//if(f.right() instanceof BinaryExpression)
+		//	ts = relationTuples.get(((BinaryExpression)f.right()).right());
+		//else
+		ts = relationTuples.get(f.right());
 		Iterator<Tuple> itr = ts.iterator();
 		ArrayList<TemporaryTuple> vals = new ArrayList<TemporaryTuple>();
 		while(itr.hasNext()){

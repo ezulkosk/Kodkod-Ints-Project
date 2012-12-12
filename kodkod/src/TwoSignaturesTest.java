@@ -930,6 +930,6 @@ System.out.println(sol.toString());
 IntExprReduction ier = new IntExprReduction();
 Formula[] formulas = ier.reduceIntExpressions(x17, x25, x28, x35, x37, x44, x46, x53, x55, x79, x86, x88, x95, x97, x104, x106, x113, x115, x139, x140, x141, x142, x143, x144, x145, x146, x147, x148, x149, x150, x151, x152, x153, x154);//x77, x78
  x16=Formula.compose(FormulaOperator.AND, formulas);
-ier.solve(x16, bounds, factory, universe); 
+ier.solve(x16, bounds, factory, universe, 4); 
 
 }}

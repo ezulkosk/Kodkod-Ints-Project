@@ -9,6 +9,21 @@ import kodkod.engine.*;
 import kodkod.engine.satlab.SATFactory;
 import kodkod.engine.config.Options;
 
+/* Alloy Input:
+sig Test 
+{  
+	x: Int,
+	y: Int,
+	z: Int,
+	weight: Int,
+}
+{ 
+	weight = x.plus[y].plus[z]
+	weight < 4
+	weight > -2
+} 
+run Pred for exactly 1 Test, 8 Int
+ */
 /* 
   ==================================================
     kodkod formula: 
@@ -47,7 +62,7 @@ import kodkod.engine.config.Options;
     this/Test.weight = this/Test.weight
   ==================================================
 */
-public final class Test {
+public final class WeightWith8Bit {
 
 public static void main(String[] args) throws Exception {
 
@@ -1763,19 +1778,9 @@ Formula x83=x9.eq(x9);
 Formula x84=x10.eq(x10);
 Formula x11=Formula.compose(FormulaOperator.AND, x12, x20, x23, x30, x32, x39, x41, x48, x50, x74, x75, x76, x77, x78, x79, x80, x81, x82, x83, x84);
 
-Solver solver = new Solver();
-solver.options().setSolver(SATFactory.DefaultSAT4J);
-solver.options().setBitwidth(8);
-solver.options().setIntEncoding(Options.IntEncoding.TWOSCOMPLEMENT);
-solver.options().setSymmetryBreaking(20);
-solver.options().setSkolemDepth(0);
-System.out.println("Solving...");
-System.out.flush();
-Solution sol = solver.solve(x11,bounds);
-System.out.println(sol.toString());
 
 IntExprReduction ier = new IntExprReduction();
 Formula[] formulas = ier.reduceIntExpressions(x12, x20, x23, x30, x32, x39, x41, x48, x50, x74, x75, x76, x77, x78, x79, x80, x81, x82, x83, x84);
-x11=Formula.compose(FormulaOperator.AND, formulas);//TODO CHANGE TO FORMULAS
-ier.solve(x11, bounds, factory, universe); 
+x11=Formula.compose(FormulaOperator.AND, formulas);
+ier.solve(x11, bounds, factory, universe, 8); 
 }}

@@ -12,17 +12,20 @@ import kodkod.ast.ConstantFormula;
 import kodkod.ast.Decl;
 import kodkod.ast.Decls;
 import kodkod.ast.ExprToIntCast;
+import kodkod.ast.Expression;
 import kodkod.ast.Formula;
 import kodkod.ast.IfExpression;
 import kodkod.ast.IfIntExpression;
 import kodkod.ast.IntComparisonFormula;
 import kodkod.ast.IntConstant;
+import kodkod.ast.IntExpression;
 import kodkod.ast.IntToExprCast;
 import kodkod.ast.MultiplicityFormula;
 import kodkod.ast.NaryExpression;
 import kodkod.ast.NaryFormula;
 import kodkod.ast.NaryIntExpression;
 import kodkod.ast.Node;
+import kodkod.ast.Node.Reduction;
 import kodkod.ast.NotFormula;
 import kodkod.ast.ProjectExpression;
 import kodkod.ast.QuantifiedFormula;
@@ -32,13 +35,27 @@ import kodkod.ast.SumExpression;
 import kodkod.ast.UnaryExpression;
 import kodkod.ast.UnaryIntExpression;
 import kodkod.ast.Variable;
+import kodkod.ast.operator.ExprOperator;
 
 public class BuildTree {
+	public enum Replace{
+		FALSE,
+		EQUALITY,
+		INEQUALITY,
+		VARIABLES
+	};
+	
+	
 	public static HashMap<IntComparisonFormula, IntComparisonFormula> swapNodePairs; 
 	Node node;
+	static Variable quantVariable = null;
+	static Replace replace = Replace.FALSE;
+	//static currentReduction = Reduction.NONE;
+	static HashMap<String, Expression> swapAnswerPairs;
 	
-	public BuildTree(Node node, HashMap<IntComparisonFormula, IntComparisonFormula> swapNodePairs)
+	public BuildTree(Node node, HashMap<IntComparisonFormula, IntComparisonFormula> swapNodePairs,HashMap<String, Expression> swapAnswerPairs)
 	{
+		this.swapAnswerPairs = swapAnswerPairs;
 		this.node = node;
 		BuildTree.swapNodePairs = swapNodePairs;
 	}
@@ -135,9 +152,26 @@ public class BuildTree {
 		}
 
 		
-		public static BinaryExpression buildTree(BinaryExpression binExpr) {
-			return null;
-			
+		public static Node buildTree(BinaryExpression binExpr) {
+			if(binExpr.op() == ExprOperator.JOIN)
+			{
+				if(swapAnswerPairs.containsKey(((Relation)binExpr.right()).name()))
+				{
+					Expression e  = swapAnswerPairs.get(((Relation)binExpr.right()).name());
+					if(e instanceof IntToExprCast){
+						if(replace == Replace.INEQUALITY){
+							
+							IntExpression i =(IntExpression) ((IntToExprCast)e).intExpr();
+							return ReplaceVariablesInTree.build(i, quantVariable);
+						}
+						else if(replace == Replace.EQUALITY)
+							return ReplaceVariablesInTree.build(e, quantVariable);
+					}
+				}
+				return binExpr;
+			}
+			else
+				return binExpr;
 		}
 
 		
@@ -172,7 +206,7 @@ public class BuildTree {
 
 		
 		public static IntConstant buildTree(IntConstant intConst) {
-			return null;
+			return intConst;
 			
 		}
 
@@ -183,9 +217,13 @@ public class BuildTree {
 		}
 
 		
-		public static ExprToIntCast buildTree(ExprToIntCast intExpr) {
-			return null;
-			
+		public static IntExpression buildTree(ExprToIntCast intExpr) {
+			if(replace == Replace.FALSE)
+				return intExpr;
+			else
+				return (IntExpression) buildByType(intExpr.expression());
+			//else 
+			//	return (Expression)buildByType(intExpr.expression());
 		}
 
 		
@@ -214,12 +252,13 @@ public class BuildTree {
 
 		
 		public static IntComparisonFormula buildTree(IntComparisonFormula intComp) {
-			return null;
-			
+		//	return (IntComparisonFormula)swapNode(intComp); //XXX revert
+			return new IntComparisonFormula((IntExpression)buildByType(intComp.left()), intComp.op(), (IntExpression)buildByType(intComp.right()));
 		}
 
-		public static QuantifiedFormula buildTree(QuantifiedFormula quantFormula) {	 
-			if(quantFormula.formula().canBeReduced > 1)
+		public static QuantifiedFormula buildTree(QuantifiedFormula quantFormula) {	
+			quantVariable = ((Decl)quantFormula.decls()).variable(); //TODO this might need to Stack
+			if(quantFormula.formula().reduction != Reduction.NONE)
 				return new QuantifiedFormula(quantFormula.quantifier(), 
 						quantFormula.decls(), (Formula)swapNode(quantFormula.formula()));
 			else
@@ -235,11 +274,11 @@ public class BuildTree {
 		public static BinaryFormula buildTree(BinaryFormula binFormula) {
 			Formula left;
 			Formula right;
-			if(binFormula.left().canBeReduced > 0)
+			if(binFormula.left().reduction != Reduction.NONE)
 				left = (Formula)swapNode(binFormula.left());
 			else
 				left = (BinaryFormula)buildByType(binFormula.left());
-			if(binFormula.right().canBeReduced > 0)
+			if(binFormula.right().reduction != Reduction.NONE)
 				right = (Formula)swapNode(binFormula.right());
 			else
 				right = (Formula)buildByType(binFormula.right());
@@ -247,7 +286,7 @@ public class BuildTree {
 		}
 
 		
-		public  static NotFormula buildTree(NotFormula not) {
+		public static NotFormula buildTree(NotFormula not) {
 			return null;
 			
 		}
@@ -260,7 +299,7 @@ public class BuildTree {
 
 		
 		public static ComparisonFormula buildTree(ComparisonFormula compFormula) {
-			return null;
+			return new ComparisonFormula((Expression) buildByType(compFormula.left()), compFormula.op(), (Expression) compFormula.right());
 		}
 
 		
@@ -282,12 +321,23 @@ public class BuildTree {
 		public static Node swapNode(Node n)
 		{
 			Node newNode = null;
-			if(n.canBeReduced == 1){
+			if(n.reduction == Reduction.DELETE){
 				newNode = Formula.constant(true);
 			}
-			else if(n.canBeReduced == 2){
-				newNode = swapNodePairs.get(n);
+			else if(n.reduction == Reduction.INEQUALITY ){
+				//newNode = swapNodePairs.get(n); //XXX revert
+				replace = Replace.INEQUALITY;
+				newNode = buildByType(n);
+				replace = Replace.FALSE;
 			}
+			else if( n.reduction == Reduction.EQUALITY)
+			{
+				replace = Replace.EQUALITY;
+				newNode = buildByType(n);
+				replace = Replace.FALSE;
+			}
+			//else if)()
+			//newNode = 
 			return newNode;
 		}
 	
