@@ -44,20 +44,15 @@ public class BuildTree {
 		INEQUALITY,
 		VARIABLES
 	};
-	
-	
-	public static HashMap<IntComparisonFormula, IntComparisonFormula> swapNodePairs; 
 	Node node;
 	static Variable quantVariable = null;
 	static Replace replace = Replace.FALSE;
-	//static currentReduction = Reduction.NONE;
 	static HashMap<String, Expression> swapAnswerPairs;
 	
-	public BuildTree(Node node, HashMap<IntComparisonFormula, IntComparisonFormula> swapNodePairs,HashMap<String, Expression> swapAnswerPairs)
+	public BuildTree(Node node,HashMap<String, Expression> swapAnswerPairs)
 	{
-		this.swapAnswerPairs = swapAnswerPairs;
+		BuildTree.swapAnswerPairs = swapAnswerPairs;
 		this.node = node;
-		BuildTree.swapNodePairs = swapNodePairs;
 	}
 	
 	public Node build()
@@ -222,8 +217,6 @@ public class BuildTree {
 				return intExpr;
 			else
 				return (IntExpression) buildByType(intExpr.expression());
-			//else 
-			//	return (Expression)buildByType(intExpr.expression());
 		}
 
 		
@@ -252,7 +245,6 @@ public class BuildTree {
 
 		
 		public static IntComparisonFormula buildTree(IntComparisonFormula intComp) {
-		//	return (IntComparisonFormula)swapNode(intComp); //XXX revert
 			return new IntComparisonFormula((IntExpression)buildByType(intComp.left()), intComp.op(), (IntExpression)buildByType(intComp.right()));
 		}
 
@@ -324,8 +316,11 @@ public class BuildTree {
 			if(n.reduction == Reduction.DELETE){
 				newNode = Formula.constant(true);
 			}
+			else if(n.reduction == Reduction.EQUALEXPRESSIONS){
+				ComparisonFormula tempForm = (ComparisonFormula)n;
+				newNode = new ComparisonFormula(tempForm.right(), tempForm.op(), tempForm.equalExpression);
+			}
 			else if(n.reduction == Reduction.INEQUALITY ){
-				//newNode = swapNodePairs.get(n); //XXX revert
 				replace = Replace.INEQUALITY;
 				newNode = buildByType(n);
 				replace = Replace.FALSE;
@@ -336,8 +331,6 @@ public class BuildTree {
 				newNode = buildByType(n);
 				replace = Replace.FALSE;
 			}
-			//else if)()
-			//newNode = 
 			return newNode;
 		}
 	

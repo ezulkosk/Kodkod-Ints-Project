@@ -52,7 +52,6 @@ public class Recompute {
 			if(cf.reduction != Reduction.DELETE)
 				continue;
 			tempTuples.add(computeByType(cf.right()));
-			System.out.println(-10%16 + " " + -18%16);
 			bogusRelations.add((Relation)((BinaryExpression)cf.left()).right());
 		}
 		boundTemporaryTuplesToBitwidth(tempTuples);
@@ -218,14 +217,14 @@ public class Recompute {
 			break;
 		
 		}
-		System.out.println("error in recompute");
+		System.out.println("error in recompute2");
 		return null;
 	}
 	
 	public static ArrayList<TemporaryTuple> composeArrayLists(ArrayList<TemporaryTuple> left, char op, ArrayList<TemporaryTuple> right)
 	{
 		if(left.size() != right.size() || left.size() == 0){
-			System.out.println("Error in recompute");
+			System.out.println("Error in recompute3333");
 			return null;
 		}
 		ArrayList<TemporaryTuple> vals = new ArrayList<TemporaryTuple>();

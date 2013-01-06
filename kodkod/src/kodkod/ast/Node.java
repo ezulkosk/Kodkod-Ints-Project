@@ -43,9 +43,9 @@ public abstract class Node {
 		INEQUALITY,
 		SWAPVARIABLES,
 		NONE, 
-		EQUALITY
+		EQUALITY, EQUALEXPRESSIONS
 	};
-	
+	public Expression equalExpression = null;
     public Reduction reduction = Reduction.NONE;
     public boolean isIntExpr = false;
     public boolean containsRelations = false;

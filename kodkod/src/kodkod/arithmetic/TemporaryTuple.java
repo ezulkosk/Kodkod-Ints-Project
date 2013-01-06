@@ -27,7 +27,7 @@ public class TemporaryTuple {
 	
 	//Since the arithmetic is using 32 java ints, we need to put the solution
 	//back into the correct range in case of overflow (spurious counterexamples...)
-	//Example: bitwidth = 4, weight = x+y+z => x=y=z=6 => weight = 18 => weight = 18%16 = 2
+	//Example: bitwidth = 4, weight = x+y+z, x=y=z=6 => weight = 18 => weight = 18%16 = 2
 	public void rebound(int bitwidth)
 	{
 		int nums = (int)Math.pow(2, bitwidth);

@@ -20,18 +20,16 @@ import kodkod.instance.Universe;
 
 public final class IntExprReduction {
 	
-	
-	
-	
 	HashSet<String> vars = new HashSet<String>();
 	public HashSet<ComparisonFormula> equalsNodes = new HashSet<ComparisonFormula>();
 	public HashSet<ComparisonFormula> currentEqualsNodes;
 	public HashSet<IntComparisonFormula> inequalityNodes = new HashSet<IntComparisonFormula>();
 	public HashSet<IntComparisonFormula> currentInequalityNodes;
 	//public ArrayList<ComparisonFormula> todoNodes = new ArrayList<ComparisonFormula>();
-	public HashMap<IntComparisonFormula, IntComparisonFormula> swapNodePairs= new HashMap<IntComparisonFormula, IntComparisonFormula>();
+	//public HashMap<IntComparisonFormula, IntComparisonFormula> swapNodePairs= new HashMap<IntComparisonFormula, IntComparisonFormula>();
 	public HashMap<String, Expression> swapAnswerPairs= new HashMap<String, Expression>();
 	public HashSet<Relation> bogusVariables = new HashSet<Relation>(); 
+	
 	Formula newTree;
 	public Formula[] oldFormulas;
 	public boolean[] createNewTree;
@@ -59,6 +57,10 @@ public final class IntExprReduction {
 			
 			if(cf.right().containsRelations){
 				cf.reduction = Reduction.DELETE;
+				if(swapAnswerPairs.containsKey(((Relation)((BinaryExpression)cf.left()).right()).name())){
+					cf.equalExpression = swapAnswerPairs.get(((Relation)((BinaryExpression)cf.left()).right()).name());
+					cf.reduction=Reduction.EQUALEXPRESSIONS;
+				}
 				swapAnswerPairs.put(((Relation)((BinaryExpression)cf.left()).right()).name(), cf.right());
 				bogusVariables.add((Relation)((BinaryExpression)cf.left()).right());
 			}
@@ -68,38 +70,10 @@ public final class IntExprReduction {
 		for(IntComparisonFormula icf : inequalityNodes){
 			icf.reduction = Reduction.INEQUALITY;
 		}
-		/*
-		for(ComparisonFormula cf : equalsNodes){
-			for(IntComparisonFormula icf : inequalityNodes){
-				if(icf.left().toString().contains(((BinaryExpression)cf.left()).right().toString())){
-					icf.reduction = Reduction.INEQUALITY;
-					cf.reduction = Reduction.DELETE;
-					
-					//add weight to "bogusVariables" list
-					//todoNodes.add(cf); 
-					if(cf.right() instanceof IntToExprCast){
-						IntExpression left = ((IntToExprCast)cf.right()).intExpr();
-						IntComparisonFormula newNode = (IntComparisonFormula) left.compare(icf.op(), icf.right());
-						newNode.reduction = Reduction.NONE;
-						swapNodePairs.put(icf, newNode);
-						BinaryExpression cfLeft = (BinaryExpression)cf.left();
-						
-						if(cfLeft.right() instanceof Relation)
-							bogusVariables.add(((Relation)((BinaryExpression)cf.left()).right()));
-						else//TODO clafer hack, needs to be cleaned
-							bogusVariables.add(((Relation)((BinaryExpression)((BinaryExpression)cf.left()).right()).right()));
-					}
-					else
-						System.out.println("ERROR in reduceIntExpressions");
-				}
-			}
-			
-			
-		}*/
 		for(int i = 0; i < formulas.length; i++)
 		if(createNewTree[i]){
 			Formula f = formulas[i];
-			BuildTree bt = new BuildTree(f, swapNodePairs, swapAnswerPairs);
+			BuildTree bt = new BuildTree(f, swapAnswerPairs);
 			newTree = (Formula)bt.build();
 			formulas[i] = newTree;
 		}
