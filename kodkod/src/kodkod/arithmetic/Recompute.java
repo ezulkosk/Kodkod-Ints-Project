@@ -10,10 +10,11 @@ import kodkod.ast.BinaryExpression;
 import kodkod.ast.BinaryIntExpression;
 import kodkod.ast.ComparisonFormula;
 import kodkod.ast.ExprToIntCast;
+import kodkod.ast.IntConstant;
 import kodkod.ast.IntToExprCast;
 import kodkod.ast.Node;
-import kodkod.ast.Relation;
 import kodkod.ast.Node.Reduction;
+import kodkod.ast.Relation;
 import kodkod.engine.Solution;
 import kodkod.instance.Instance;
 import kodkod.instance.Tuple;
@@ -29,6 +30,7 @@ public class Recompute {
 	static TupleFactory factory;
 	static int bitwidth;
 	static ArrayList<Relation> bogusRelations = new ArrayList<Relation>();
+	static int numberOfType = 0;
 	
 	//shouldn't be static
 	public static Solution recompute(Solution sol, TupleFactory factory, HashSet<ComparisonFormula> formulas, HashSet<Relation> bogusVariables, int bitwidth)
@@ -51,7 +53,22 @@ public class Recompute {
 		{
 			if(cf.reduction != Reduction.DELETE)
 				continue;
-			tempTuples.add(computeByType(cf.right()));
+			//new
+			System.out.println("B" +relationTuples.get(((BinaryExpression)cf.left()).right()));
+			TupleSet ts;
+			ts = relationTuples.get(((BinaryExpression)cf.left()).right());
+			numberOfType = ts.size();
+			//Iterator<Tuple> itr = ts.iterator();
+			
+			//ArrayList<TemporaryTuple> vals = new ArrayList<TemporaryTuple>();
+			ArrayList<Integer> tempInts;
+			//while(itr.hasNext()){
+				//Tuple t = itr.next();
+				//vals.add(new TemporaryTuple(t.atom(0), 0));//Integer.parseInt(t.atom(1).toString()));
+			//}
+			//end new and remove 2nd arg of below first add
+			tempInts = computeByType(cf.right());
+			tempTuples.add(concat(ts, tempInts));
 			bogusRelations.add((Relation)((BinaryExpression)cf.left()).right());
 		}
 		boundTemporaryTuplesToBitwidth(tempTuples);
@@ -122,8 +139,20 @@ public class Recompute {
 		return new Solution(oldSolution.outcome(), oldSolution.stats(), newInstance, oldSolution.proof());
 	}
 	
+	public static ArrayList<TemporaryTuple> concat(TupleSet ts, ArrayList<Integer> tempInts)
+	{
+		System.out.println(ts);
+		ArrayList<TemporaryTuple> tuples = new ArrayList<TemporaryTuple>();
+		Iterator<Integer>itr = tempInts.iterator();
+		Iterator<Tuple>itr2 = ts.iterator();
+		while(itr.hasNext())
+			tuples.add(new TemporaryTuple(itr2.next().atom(0), itr.next()));
+		return tuples;
+	}
 	
-	public static ArrayList<TemporaryTuple> computeByType(Node f){
+	public static ArrayList<Integer> computeByType(Node f){
+		System.out.println(f);
+		//System.out.println(ts);
 		if(f instanceof IntToExprCast)
 			return compute((IntToExprCast) f);
 		else if(f instanceof BinaryIntExpression)
@@ -132,40 +161,48 @@ public class Recompute {
 			return compute((BinaryExpression) f);
 		else if(f instanceof ExprToIntCast)
 			return compute((ExprToIntCast) f);
+		else if(f instanceof IntConstant)
+			return compute((IntConstant) f);
 		else{
-			System.out.println("Error in recompute");
+			System.out.println("Error in recompute5");
+			System.out.println(f);
 			return null;
 		}
 	}
 	
-	public static ArrayList<TemporaryTuple> compute(IntToExprCast f)
+	public static ArrayList<Integer> compute(IntToExprCast f)
 	{
 		return computeByType(f.intExpr());
 	}
 	
-	public static ArrayList<TemporaryTuple> compute(BinaryExpression f)
+	public static ArrayList<Integer> compute(BinaryExpression f)
 	{
 		//System.out.println(f.right());
 		//might need something like this
 		//if(bogusVariables.contains(f.right()))
 		//	System.out.println("Error Here");
 		
-		TupleSet ts;
+		//TupleSet ts;
 		//TODO claferhack, needs to be fixed
 		//if(f.right() instanceof BinaryExpression)
 		//	ts = relationTuples.get(((BinaryExpression)f.right()).right());
 		//else
-		ts = relationTuples.get(f.right());
-		Iterator<Tuple> itr = ts.iterator();
-		ArrayList<TemporaryTuple> vals = new ArrayList<TemporaryTuple>();
+		TupleSet fTuples = relationTuples.get(f.right());
+		//Iterator<TemporaryTuple> itr = ts.iterator();
+		//ArrayList<TemporaryTuple> vals = new ArrayList<TemporaryTuple>();
+		Iterator<Tuple> itr = fTuples.iterator();
+		ArrayList<Integer> tempInts = new ArrayList<Integer>();
 		while(itr.hasNext()){
-			Tuple t = itr.next();
-			vals.add(new TemporaryTuple(t.atom(0),Integer.parseInt(t.atom(1).toString())));//Integer.parseInt(t.atom(1).toString()));
+			Tuple ft = itr.next();
+			//vals.add(new TemporaryTuple(t.atom(0),Integer.parseInt(t.atom(1).toString())));//Integer.parseInt(t.atom(1).toString()));
+			System.out.println(ft.atom(1));
+			//ft.setRight(Integer.parseInt(ft.atom(1).toString()));
+			tempInts.add(Integer.parseInt(ft.atom(1).toString()));
 		}
-		return vals;
+		return tempInts;
 	}
 	
-	public static ArrayList<TemporaryTuple> compute(ExprToIntCast f)
+	public static ArrayList<Integer> compute(ExprToIntCast f)
 	{
 		switch(f.op()){
 		case CARDINALITY:
@@ -179,8 +216,16 @@ public class Recompute {
 		return null;
 	}
 	
+	public static ArrayList<Integer> compute(IntConstant f)
+ 	{
+		System.out.println("IN" + numberOfType);
+		ArrayList<Integer> tempInts = new ArrayList<Integer>();
+		for(int i = 0; i < numberOfType; i++)
+			tempInts.add(f.value());
+		return tempInts;
+	}
 	
-	public static ArrayList<TemporaryTuple> compute(BinaryIntExpression f)
+	public static ArrayList<Integer> compute(BinaryIntExpression f)
 	{
 		switch(f.op()){
 		case ABS:
@@ -221,30 +266,30 @@ public class Recompute {
 		return null;
 	}
 	
-	public static ArrayList<TemporaryTuple> composeArrayLists(ArrayList<TemporaryTuple> left, char op, ArrayList<TemporaryTuple> right)
+	public static ArrayList<Integer> composeArrayLists(ArrayList<Integer> left, char op, ArrayList<Integer> right)
 	{
 		if(left.size() != right.size() || left.size() == 0){
 			System.out.println("Error in recompute3333");
 			return null;
 		}
-		ArrayList<TemporaryTuple> vals = new ArrayList<TemporaryTuple>();
+		ArrayList<Integer> vals = new ArrayList<Integer>();
 		
 		switch(op){
 		case '+':
 			for(int i = 0; i < left.size(); i++)
-				vals.add(new TemporaryTuple(left.get(i).left(), left.get(i).right() + right.get(i).right()));
+				vals.add(left.get(i) + right.get(i));
 			break;
 		case '-':
 			for(int i = 0; i < left.size(); i++)
-				vals.add(new TemporaryTuple(left.get(i).left(), left.get(i).right() - right.get(i).right()));
+				vals.add(left.get(i) - right.get(i));
 			break;
 		case '*':
 			for(int i = 0; i < left.size(); i++)
-				vals.add(new TemporaryTuple(left.get(i).left(), left.get(i).right() * right.get(i).right()));
+				vals.add(left.get(i)* right.get(i));
 			break;
 		case '/':
 			for(int i = 0; i < left.size(); i++)
-				vals.add(new TemporaryTuple(left.get(i).left(), left.get(i).right() / right.get(i).right()));
+				vals.add(left.get(i) / right.get(i));
 			break;
 		default:
 			System.out.println("Error in recompute");
