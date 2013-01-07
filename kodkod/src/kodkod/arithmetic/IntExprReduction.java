@@ -19,14 +19,9 @@ import kodkod.instance.TupleFactory;
 import kodkod.instance.Universe;
 
 public final class IntExprReduction {
-	
 	HashSet<String> vars = new HashSet<String>();
 	public HashSet<ComparisonFormula> equalsNodes = new HashSet<ComparisonFormula>();
-	public HashSet<ComparisonFormula> currentEqualsNodes;
 	public HashSet<IntComparisonFormula> inequalityNodes = new HashSet<IntComparisonFormula>();
-	public HashSet<IntComparisonFormula> currentInequalityNodes;
-	//public ArrayList<ComparisonFormula> todoNodes = new ArrayList<ComparisonFormula>();
-	//public HashMap<IntComparisonFormula, IntComparisonFormula> swapNodePairs= new HashMap<IntComparisonFormula, IntComparisonFormula>();
 	public HashMap<String, Expression> swapAnswerPairs= new HashMap<String, Expression>();
 	public HashSet<Relation> bogusVariables = new HashSet<Relation>(); 
 	
@@ -43,8 +38,8 @@ public final class IntExprReduction {
 			Formula f = formulas[i];
 			AnnotateTree.start();
 			AnnotateTree.callByType(f);
-			currentEqualsNodes = AnnotateTree.equalsNodes;
-			currentInequalityNodes = AnnotateTree.inequalityNodes;
+			HashSet<ComparisonFormula> currentEqualsNodes = AnnotateTree.equalsNodes;
+			HashSet<IntComparisonFormula> currentInequalityNodes = AnnotateTree.inequalityNodes;
 			createNewTree[i] = false;
 			if(!currentEqualsNodes.isEmpty() || !currentInequalityNodes.isEmpty())
 				createNewTree[i] = true;
@@ -54,15 +49,15 @@ public final class IntExprReduction {
 		}
 		for(ComparisonFormula cf : equalsNodes){
 			System.out.println(cf);
-			
+			Relation answer = (Relation)((BinaryExpression)cf.left()).right();
 			if(cf.right().containsRelations){
 				cf.reduction = Reduction.DELETE;
-				if(swapAnswerPairs.containsKey(((Relation)((BinaryExpression)cf.left()).right()).name())){
-					cf.equalExpression = swapAnswerPairs.get(((Relation)((BinaryExpression)cf.left()).right()).name());
+				if(swapAnswerPairs.containsKey(answer.name())){
+					cf.equalExpression = swapAnswerPairs.get(answer.name());
 					cf.reduction=Reduction.EQUALEXPRESSIONS;
 				}
-				swapAnswerPairs.put(((Relation)((BinaryExpression)cf.left()).right()).name(), cf.right());
-				bogusVariables.add((Relation)((BinaryExpression)cf.left()).right());
+				swapAnswerPairs.put(answer.name(), cf.right());
+				bogusVariables.add(answer);
 			}
 			else
 				cf.reduction = Reduction.EQUALITY;

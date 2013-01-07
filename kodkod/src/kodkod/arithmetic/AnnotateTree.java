@@ -33,8 +33,7 @@ import kodkod.ast.Variable;
 import kodkod.ast.operator.ExprCastOperator;
 import kodkod.ast.operator.ExprCompOperator;
 
-//Traverses the tree looking for equality and inequality nodes, 
-//annotating accordingly
+//Traverses the tree marking equality and inequality nodes 
 public class AnnotateTree {
 
 	public static HashSet<ComparisonFormula> equalsNodes = new HashSet<ComparisonFormula>();

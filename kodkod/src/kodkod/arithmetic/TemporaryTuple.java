@@ -25,10 +25,6 @@ public class TemporaryTuple {
 		return "[" + left + "," + right + "]";
 	}
 	
-	public void setRight(int num)
-	{
-		this.right = num;
-	}
 	
 	
 	//Since the arithmetic is using 32 java ints, we need to put the solution

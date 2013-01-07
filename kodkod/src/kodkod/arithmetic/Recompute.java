@@ -10,6 +10,7 @@ import kodkod.ast.BinaryExpression;
 import kodkod.ast.BinaryIntExpression;
 import kodkod.ast.ComparisonFormula;
 import kodkod.ast.ExprToIntCast;
+import kodkod.ast.Expression;
 import kodkod.ast.IntConstant;
 import kodkod.ast.IntToExprCast;
 import kodkod.ast.Node;
@@ -53,23 +54,13 @@ public class Recompute {
 		{
 			if(cf.reduction != Reduction.DELETE)
 				continue;
-			//new
-			System.out.println("B" +relationTuples.get(((BinaryExpression)cf.left()).right()));
-			TupleSet ts;
-			ts = relationTuples.get(((BinaryExpression)cf.left()).right());
+			Relation answer = (Relation)((BinaryExpression)cf.left()).right();
+			System.out.println("C" + answer);
+			TupleSet ts = relationTuples.get(answer);
 			numberOfType = ts.size();
-			//Iterator<Tuple> itr = ts.iterator();
-			
-			//ArrayList<TemporaryTuple> vals = new ArrayList<TemporaryTuple>();
-			ArrayList<Integer> tempInts;
-			//while(itr.hasNext()){
-				//Tuple t = itr.next();
-				//vals.add(new TemporaryTuple(t.atom(0), 0));//Integer.parseInt(t.atom(1).toString()));
-			//}
-			//end new and remove 2nd arg of below first add
-			tempInts = computeByType(cf.right());
+			ArrayList<Integer> tempInts = computeByType(cf.right());
 			tempTuples.add(concat(ts, tempInts));
-			bogusRelations.add((Relation)((BinaryExpression)cf.left()).right());
+			bogusRelations.add(answer);
 		}
 		boundTemporaryTuplesToBitwidth(tempTuples);
 		return computeNewSolution(sol, tempTuples);
@@ -151,8 +142,6 @@ public class Recompute {
 	}
 	
 	public static ArrayList<Integer> computeByType(Node f){
-		System.out.println(f);
-		//System.out.println(ts);
 		if(f instanceof IntToExprCast)
 			return compute((IntToExprCast) f);
 		else if(f instanceof BinaryIntExpression)
@@ -177,26 +166,12 @@ public class Recompute {
 	
 	public static ArrayList<Integer> compute(BinaryExpression f)
 	{
-		//System.out.println(f.right());
-		//might need something like this
-		//if(bogusVariables.contains(f.right()))
-		//	System.out.println("Error Here");
-		
-		//TupleSet ts;
-		//TODO claferhack, needs to be fixed
-		//if(f.right() instanceof BinaryExpression)
-		//	ts = relationTuples.get(((BinaryExpression)f.right()).right());
-		//else
 		TupleSet fTuples = relationTuples.get(f.right());
-		//Iterator<TemporaryTuple> itr = ts.iterator();
-		//ArrayList<TemporaryTuple> vals = new ArrayList<TemporaryTuple>();
 		Iterator<Tuple> itr = fTuples.iterator();
 		ArrayList<Integer> tempInts = new ArrayList<Integer>();
 		while(itr.hasNext()){
 			Tuple ft = itr.next();
-			//vals.add(new TemporaryTuple(t.atom(0),Integer.parseInt(t.atom(1).toString())));//Integer.parseInt(t.atom(1).toString()));
 			System.out.println(ft.atom(1));
-			//ft.setRight(Integer.parseInt(ft.atom(1).toString()));
 			tempInts.add(Integer.parseInt(ft.atom(1).toString()));
 		}
 		return tempInts;
