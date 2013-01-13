@@ -406,5 +406,10 @@ public final class Options implements Cloneable {
 		 */
 		abstract IntRange range(int bitwidth) ;
 	}
+	public void setFlatten(boolean b) {
+		System.err.println("We added this method, i mean set Flatten, to adapot Alloy project with new Kodkod.");
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
