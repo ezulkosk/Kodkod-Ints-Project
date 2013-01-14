@@ -20,8 +20,8 @@ import kodkod.instance.Universe;
 
 public final class IntExprReduction {
 	HashSet<String> vars = new HashSet<String>();
-	public HashSet<ComparisonFormula> equalsNodes = new HashSet<ComparisonFormula>();
-	public HashSet<IntComparisonFormula> inequalityNodes = new HashSet<IntComparisonFormula>();
+	public HashSet<ComparisonFormula> comparisonNodes = new HashSet<ComparisonFormula>();
+	public HashSet<IntComparisonFormula> intComparisonNodes = new HashSet<IntComparisonFormula>();
 	public HashMap<String, Expression> swapAnswerPairs= new HashMap<String, Expression>();
 	public HashSet<Relation> bogusVariables = new HashSet<Relation>(); 
 	
@@ -38,16 +38,16 @@ public final class IntExprReduction {
 			Formula f = formulas[i];
 			AnnotateTree.start();
 			AnnotateTree.callByType(f);
-			HashSet<ComparisonFormula> currentEqualsNodes = AnnotateTree.equalsNodes;
-			HashSet<IntComparisonFormula> currentInequalityNodes = AnnotateTree.inequalityNodes;
+			HashSet<ComparisonFormula> currentComparisonNodes = AnnotateTree.comparisonNodes;
+			HashSet<IntComparisonFormula> currentInequalityNodes = AnnotateTree.intComparisonNodes;
 			createNewTree[i] = false;
-			if(!currentEqualsNodes.isEmpty() || !currentInequalityNodes.isEmpty())
+			if(!currentComparisonNodes.isEmpty() || !currentInequalityNodes.isEmpty())
 				createNewTree[i] = true;
 			
-			equalsNodes.addAll(currentEqualsNodes);
-			inequalityNodes.addAll(currentInequalityNodes);
+			comparisonNodes.addAll(currentComparisonNodes);
+			intComparisonNodes.addAll(currentInequalityNodes);
 		}
-		for(ComparisonFormula cf : equalsNodes){
+		for(ComparisonFormula cf : comparisonNodes){
 			System.out.println(cf);
 			Relation answer = (Relation)((BinaryExpression)cf.left()).right();
 			if(cf.right().containsRelations){
@@ -60,10 +60,10 @@ public final class IntExprReduction {
 				bogusVariables.add(answer);
 			}
 			else
-				cf.reduction = Reduction.EQUALITY;
+				cf.reduction = Reduction.COMPARISON;
 		}
-		for(IntComparisonFormula icf : inequalityNodes){
-			icf.reduction = Reduction.INEQUALITY;
+		for(IntComparisonFormula icf : intComparisonNodes){
+			icf.reduction = Reduction.INTCOMPARISON;
 		}
 		for(int i = 0; i < formulas.length; i++)
 		if(createNewTree[i]){
@@ -89,7 +89,7 @@ public final class IntExprReduction {
 		Solution sol = solver.solve(formula,bounds);
 		System.out.println(sol.toString());
 		
-		System.out.println(Recompute.recompute(sol, factory, equalsNodes, bogusVariables, bitwidth).toString());
+		System.out.println(Recompute.recompute(sol, factory, comparisonNodes, bogusVariables, bitwidth).toString());
 	}
 	
 	

@@ -40,12 +40,12 @@ import kodkod.ast.operator.ExprOperator;
 public class BuildTree {
 	public enum Replace{
 		FALSE,
-		EQUALITY,
-		INEQUALITY,
+		COMPARISON,
+		INTCOMPARISON,
 		VARIABLES
 	};
 	Node node;
-	static Variable quantVariable = null;
+	//static Variable variable = null;
 	static Replace replace = Replace.FALSE;
 	static HashMap<String, Expression> swapAnswerPairs;
 	
@@ -154,13 +154,13 @@ public class BuildTree {
 				{
 					Expression e  = swapAnswerPairs.get(((Relation)binExpr.right()).name());
 					if(e instanceof IntToExprCast){
-						if(replace == Replace.INEQUALITY){
+						if(replace == Replace.INTCOMPARISON){
 							
 							IntExpression i =(IntExpression) ((IntToExprCast)e).intExpr();
-							return ReplaceVariablesInTree.build(i, quantVariable);
+							return ReplaceVariablesInTree.build(i, binExpr.left());
 						}
-						else if(replace == Replace.EQUALITY)
-							return ReplaceVariablesInTree.build(e, quantVariable);
+						else if(replace == Replace.COMPARISON)
+							return ReplaceVariablesInTree.build(e, ((Variable)binExpr.left()));
 					}
 				}
 				return binExpr;
@@ -227,7 +227,7 @@ public class BuildTree {
 
 		
 		public static BinaryIntExpression buildTree(BinaryIntExpression intExpr) {
-			return null;
+			return new BinaryIntExpression((IntExpression)buildByType(intExpr.left()), intExpr.op(), (IntExpression)buildByType(intExpr.right()));
 			
 		}
 
@@ -244,18 +244,28 @@ public class BuildTree {
 		}
 
 		
-		public static IntComparisonFormula buildTree(IntComparisonFormula intComp) {
-			return new IntComparisonFormula((IntExpression)buildByType(intComp.left()), intComp.op(), (IntExpression)buildByType(intComp.right()));
+		public static Node buildTree(IntComparisonFormula n) {
+			//return new IntComparisonFormula((IntExpression)buildByType(intComp.left()), intComp.op(), (IntExpression)buildByType(intComp.right()));
+			Node newNode = null;
+			if(n.reduction == Reduction.INTCOMPARISON ){
+				replace = Replace.INTCOMPARISON;
+				newNode = new IntComparisonFormula((IntExpression)buildByType(n.left()), n.op(), (IntExpression)buildByType(n.right()));
+				replace = Replace.FALSE;
+			}
+			return newNode;
 		}
 
 		public static QuantifiedFormula buildTree(QuantifiedFormula quantFormula) {	
-			quantVariable = ((Decl)quantFormula.decls()).variable(); //TODO this might need to Stack
+			/*quantVariable = ((Decl)quantFormula.decls()).variable(); //TODO this might need to Stack
 			if(quantFormula.formula().reduction != Reduction.NONE)
 				return new QuantifiedFormula(quantFormula.quantifier(), 
 						quantFormula.decls(), (Formula)swapNode(quantFormula.formula()));
 			else
 				return new QuantifiedFormula(quantFormula.quantifier(), 
-						quantFormula.decls(), (Formula)buildByType(quantFormula.formula()));
+						quantFormula.decls(), (Formula)buildByType(quantFormula.formula()));*/
+			//quantVariable = ((Decl)quantFormula.decls()).variable();
+			return new QuantifiedFormula(quantFormula.quantifier(), 
+					quantFormula.decls(), (Formula)buildByType(quantFormula.formula()));
 		}
 		
 		public static NaryFormula buildTree(NaryFormula formula) {
@@ -264,7 +274,7 @@ public class BuildTree {
 		}
 		
 		public static BinaryFormula buildTree(BinaryFormula binFormula) {
-			Formula left;
+			/*Formula left;
 			Formula right;
 			if(binFormula.left().reduction != Reduction.NONE)
 				left = (Formula)swapNode(binFormula.left());
@@ -274,7 +284,8 @@ public class BuildTree {
 				right = (Formula)swapNode(binFormula.right());
 			else
 				right = (Formula)buildByType(binFormula.right());
-			return new BinaryFormula(left, binFormula.op(), right);
+			return new BinaryFormula(left, binFormula.op(), right);*/
+			return new BinaryFormula((Formula)buildByType(binFormula.left()), binFormula.op(), (Formula)buildByType(binFormula.right()));
 		}
 
 		
@@ -290,8 +301,25 @@ public class BuildTree {
 		}
 
 		
-		public static ComparisonFormula buildTree(ComparisonFormula compFormula) {
-			return new ComparisonFormula((Expression) buildByType(compFormula.left()), compFormula.op(), (Expression) compFormula.right());
+		public static Node buildTree(ComparisonFormula n) {
+			//return new ComparisonFormula((Expression) buildByType(compFormula.left()), compFormula.op(), (Expression) compFormula.right());
+			Node newNode;
+			if(n.reduction == Reduction.DELETE){
+				return Formula.constant(true);
+			}
+			else if(n.reduction == Reduction.EQUALEXPRESSIONS){
+				ComparisonFormula tempForm = (ComparisonFormula)n;
+				return new ComparisonFormula(tempForm.right(), tempForm.op(), tempForm.equalExpression);
+			}
+			else if( n.reduction == Reduction.COMPARISON)
+			{
+				replace = Replace.COMPARISON;
+				newNode = new ComparisonFormula((Expression) buildByType(n.left()), n.op(), (Expression) n.right());
+				replace = Replace.FALSE;
+			}
+			else
+				newNode = n;
+			return newNode;
 		}
 
 		
@@ -320,14 +348,14 @@ public class BuildTree {
 				ComparisonFormula tempForm = (ComparisonFormula)n;
 				newNode = new ComparisonFormula(tempForm.right(), tempForm.op(), tempForm.equalExpression);
 			}
-			else if(n.reduction == Reduction.INEQUALITY ){
-				replace = Replace.INEQUALITY;
+			else if(n.reduction == Reduction.INTCOMPARISON ){
+				replace = Replace.INTCOMPARISON;
 				newNode = buildByType(n);
 				replace = Replace.FALSE;
 			}
-			else if( n.reduction == Reduction.EQUALITY)
+			else if( n.reduction == Reduction.COMPARISON)
 			{
-				replace = Replace.EQUALITY;
+				replace = Replace.COMPARISON;
 				newNode = buildByType(n);
 				replace = Replace.FALSE;
 			}

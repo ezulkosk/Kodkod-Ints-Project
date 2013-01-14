@@ -1,5 +1,7 @@
 import java.util.Arrays;
 import java.util.List;
+
+import kodkod.arithmetic.IntExprReduction;
 import kodkod.ast.*;
 import kodkod.ast.operator.*;
 import kodkod.instance.*;
@@ -463,14 +465,10 @@ Formula x157=x14.eq(x14);
 Formula x158=x15.eq(x15);
 Formula x16=Formula.compose(FormulaOperator.AND, x17, x25, x28, x35, x37, x44, x46, x53, x55, x79, x86, x88, x95, x97, x104, x106, x113, x115, x139, x143, x144, x145, x146, x147, x148, x149, x150, x151, x152, x153, x154, x155, x156, x157, x158);
 
-Solver solver = new Solver();
-solver.options().setSolver(SATFactory.DefaultSAT4J);
-solver.options().setBitwidth(4);
-solver.options().setIntEncoding(Options.IntEncoding.TWOSCOMPLEMENT);
-solver.options().setSymmetryBreaking(20);
-solver.options().setSkolemDepth(0);
-System.out.println("Solving...");
-System.out.flush();
-Solution sol = solver.solve(x16,bounds);
-System.out.println(sol.toString());
+
+IntExprReduction ier = new IntExprReduction();
+Formula[] formulas = ier.reduceIntExpressions(x17, x25, x28, x35, x37, x44, x46, x53, x55, x79, x86, x88, x95, x97, x104, x106, x113, x115, x139, x143, x144, x145, x146, x147, x148, x149, x150, x151, x152, x153, x154, x155, x156, x157, x158);//x77, x78
+Formula newFormula=Formula.compose(FormulaOperator.AND, formulas);
+ier.solve(newFormula, bounds, factory, universe,32); 
+
 }}

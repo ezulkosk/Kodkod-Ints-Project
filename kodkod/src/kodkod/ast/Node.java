@@ -40,10 +40,9 @@ public abstract class Node {
 	public enum Reduction{
 		DELETE,
 		REPLACE,
-		INEQUALITY,
 		SWAPVARIABLES,
 		NONE, 
-		EQUALITY, EQUALEXPRESSIONS
+		COMPARISON, EQUALEXPRESSIONS,INTCOMPARISON
 	};
 	public Expression equalExpression = null;
     public Reduction reduction = Reduction.NONE;

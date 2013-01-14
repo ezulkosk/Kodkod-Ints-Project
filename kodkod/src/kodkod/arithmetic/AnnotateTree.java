@@ -36,13 +36,13 @@ import kodkod.ast.operator.ExprCompOperator;
 //Traverses the tree marking equality and inequality nodes 
 public class AnnotateTree {
 
-	public static HashSet<ComparisonFormula> equalsNodes = new HashSet<ComparisonFormula>();
-	public static HashSet<IntComparisonFormula> inequalityNodes = new HashSet<IntComparisonFormula>();
+	public static HashSet<ComparisonFormula> comparisonNodes = new HashSet<ComparisonFormula>();
+	public static HashSet<IntComparisonFormula> intComparisonNodes = new HashSet<IntComparisonFormula>();
 	
 	public static void start()
 	{
-		equalsNodes = new HashSet<ComparisonFormula>();
-		inequalityNodes = new HashSet<IntComparisonFormula>();
+		comparisonNodes = new HashSet<ComparisonFormula>();
+		intComparisonNodes = new HashSet<IntComparisonFormula>();
 	}
 	
 	public static void callByType(Object f)
@@ -94,7 +94,8 @@ public class AnnotateTree {
 		callByType(f.left());
 		callByType(f.right());
 		if(f.op() == ExprCompOperator.EQUALS && (f.left().isIntExpr || f.right().isIntExpr)){
-			equalsNodes.add(f);
+		//	if(f.left() instanceof BinaryExpression && ((BinaryExpression)f.left()).right() instanceof Relation)
+			comparisonNodes.add(f);
 		}
 	}
 	public static void checkForInts(ConstantFormula f)
@@ -111,7 +112,7 @@ public class AnnotateTree {
 	{
 		callByType(f.left());
 		callByType(f.right());
-		inequalityNodes.add(f);
+		intComparisonNodes.add(f);
 		if(f.left().containsRelations || f.right().containsRelations)
 			f.containsRelations = true;
 	}

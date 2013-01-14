@@ -24,9 +24,9 @@ import kodkod.ast.operator.ExprCastOperator;
 
 public class ReplaceVariablesInTree {
 
-	static Variable variable;
+	static Expression variable;
 	
-	public static Node build(Node f, Variable v)
+	public static Node build(Node f, Expression v)
 	{
 		variable = v;
 		if(v == null)
@@ -126,7 +126,7 @@ public class ReplaceVariablesInTree {
 	}
 
 	private static Node replaceVariable(BinaryExpression f) {
-		if(f.left() instanceof Variable)
+		if(f.left() instanceof Variable || f.left() instanceof Relation)
 		{
 			return new BinaryExpression(variable, f.op(), f.right());
 		}
