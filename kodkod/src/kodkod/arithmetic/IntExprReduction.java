@@ -33,7 +33,7 @@ public final class IntExprReduction {
 	{
 		AnnotateTree.start();
 		createNewTree = new boolean[formulas.length];
-		for(int i = 0; i < formulas.length; i++)
+		for(int i = 0; i < formulas.length; i++) 
 		{
 			Formula f = formulas[i];
 			AnnotateTree.start();
@@ -48,19 +48,55 @@ public final class IntExprReduction {
 			intComparisonNodes.addAll(currentInequalityNodes);
 		}
 		for(ComparisonFormula cf : comparisonNodes){
-			System.out.println(cf);
-			Relation answer = (Relation)((BinaryExpression)cf.left()).right();
-			if(cf.right().containsRelations){
-				cf.reduction = Reduction.DELETE;
-				if(swapAnswerPairs.containsKey(answer.name())){
-					cf.equalExpression = swapAnswerPairs.get(answer.name());
-					cf.reduction=Reduction.EQUALEXPRESSIONS;
+			/*XXX revert to this when everything breaks...
+			 System.out.println(cf);
+			 
+			if(cf.assignmentOnLeft){
+				Relation answer = (Relation)((BinaryExpression)cf.left()).right();
+				if(cf.right().containsRelations){
+					cf.reduction = Reduction.DELETE;
+					if(swapAnswerPairs.containsKey(answer.name())){
+						cf.equalExpression = swapAnswerPairs.get(answer.name());
+						cf.reduction=Reduction.EQUALEXPRESSIONS;
+					}
+					swapAnswerPairs.put(answer.name(), cf.right());
+					bogusVariables.add(answer);
 				}
-				swapAnswerPairs.put(answer.name(), cf.right());
-				bogusVariables.add(answer);
+				else
+					cf.reduction = Reduction.COMPARISON;
 			}
-			else
-				cf.reduction = Reduction.COMPARISON;
+			else{//assignment on right
+				Relation answer = (Relation)((BinaryExpression)cf.right()).right();
+				if(cf.left().containsRelations){
+					cf.reduction = Reduction.DELETE;
+					if(swapAnswerPairs.containsKey(answer.name())){
+						cf.equalExpression = swapAnswerPairs.get(answer.name());
+						cf.reduction=Reduction.EQUALEXPRESSIONS;
+					}
+					swapAnswerPairs.put(answer.name(), cf.left());
+					bogusVariables.add(answer);
+				}
+				else
+					cf.reduction = Reduction.COMPARISON;
+			}
+			*/
+			Relation answer;
+			Expression expr;
+			if(cf.assignmentOnLeft){
+				answer = (Relation)((BinaryExpression)cf.left()).right();
+				expr = cf.right();
+			}
+			else{
+				answer = (Relation)((BinaryExpression)cf.right()).right();
+				expr = cf.left();
+			}
+			cf.reduction = Reduction.DELETE;
+			if(swapAnswerPairs.containsKey(answer.name())){
+				cf.equalExpression = swapAnswerPairs.get(answer.name());
+				cf.reduction=Reduction.EQUALEXPRESSIONS;
+			}
+			swapAnswerPairs.put(answer.name(), expr);
+			bogusVariables.add(answer);
 		}
 		for(IntComparisonFormula icf : intComparisonNodes){
 			icf.reduction = Reduction.INTCOMPARISON;

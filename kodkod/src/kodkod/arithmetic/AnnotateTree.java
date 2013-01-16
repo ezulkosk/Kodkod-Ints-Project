@@ -94,8 +94,13 @@ public class AnnotateTree {
 		callByType(f.left());
 		callByType(f.right());
 		if(f.op() == ExprCompOperator.EQUALS && (f.left().isIntExpr || f.right().isIntExpr)){
-		//	if(f.left() instanceof BinaryExpression && ((BinaryExpression)f.left()).right() instanceof Relation)
-			comparisonNodes.add(f);
+			if(f.left() instanceof BinaryExpression) // && ((BinaryExpression)f.left()).right() instanceof Relation)
+				comparisonNodes.add(f);
+			else if(f.right() instanceof BinaryExpression){
+				f.assignmentOnLeft = false;
+				comparisonNodes.add(f);
+			}
+				
 		}
 	}
 	public static void checkForInts(ConstantFormula f)
@@ -159,8 +164,7 @@ public class AnnotateTree {
 	public static void checkForInts(BinaryExpression binExpr) {
 		callByType(binExpr.left());
 		callByType(binExpr.right());
-		if(binExpr.left().containsRelations || binExpr.right().containsRelations)
-			binExpr.containsRelations = true;
+		binExpr.containsRelations = binExpr.left().containsRelations || binExpr.right().containsRelations;
 	}
 
 	public static void checkForInts(NaryExpression expr) {
@@ -181,8 +185,7 @@ public class AnnotateTree {
 	public static void checkForInts(IntToExprCast castExpr) {
 		castExpr.isIntExpr = true;
 		callByType(castExpr.intExpr());
-		if(castExpr.intExpr().containsRelations)
-			castExpr.containsRelations = true;
+		castExpr.containsRelations = castExpr.intExpr().containsRelations;
 	}
 	
 	public static void checkForInts(IntConstant intConst) {
