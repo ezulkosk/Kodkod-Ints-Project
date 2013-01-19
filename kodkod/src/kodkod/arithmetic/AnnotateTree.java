@@ -12,6 +12,7 @@ import kodkod.ast.ConstantFormula;
 import kodkod.ast.Decl;
 import kodkod.ast.Decls;
 import kodkod.ast.ExprToIntCast;
+import kodkod.ast.Expression;
 import kodkod.ast.IfExpression;
 import kodkod.ast.IfIntExpression;
 import kodkod.ast.IntComparisonFormula;
@@ -32,12 +33,19 @@ import kodkod.ast.UnaryIntExpression;
 import kodkod.ast.Variable;
 import kodkod.ast.operator.ExprCastOperator;
 import kodkod.ast.operator.ExprCompOperator;
+import kodkod.ast.operator.Multiplicity;
 
 //Traverses the tree marking equality and inequality nodes 
 public class AnnotateTree {
 
 	public static HashSet<ComparisonFormula> comparisonNodes = new HashSet<ComparisonFormula>();
 	public static HashSet<IntComparisonFormula> intComparisonNodes = new HashSet<IntComparisonFormula>();
+	
+	
+	public static Variable quantVariable;
+	public static Expression quantExpression;
+	public static Multiplicity multiplicity; 
+	
 	
 	public static void start()
 	{
@@ -94,6 +102,7 @@ public class AnnotateTree {
 		callByType(f.left());
 		callByType(f.right());
 		if(f.op() == ExprCompOperator.EQUALS && (f.left().isIntExpr || f.right().isIntExpr)){
+			System.out.println(f);
 			if(f.left() instanceof BinaryExpression) // && ((BinaryExpression)f.left()).right() instanceof Relation)
 				comparisonNodes.add(f);
 			else if(f.right() instanceof BinaryExpression){
@@ -118,12 +127,16 @@ public class AnnotateTree {
 		callByType(f.left());
 		callByType(f.right());
 		intComparisonNodes.add(f);
-		if(f.left().containsRelations || f.right().containsRelations)
-			f.containsRelations = true;
 	}
 	
 	public static void checkForInts(QuantifiedFormula f)
 	{
+		Decls decls = f.decls();
+		Decl d = decls.get(0);
+		multiplicity = d.multiplicity();
+		quantVariable = d.variable();
+		quantExpression = d.expression();
+		System.out.println(multiplicity+ " " + quantVariable);
 		callByType(f.formula());
 	}
 	
@@ -146,11 +159,11 @@ public class AnnotateTree {
 	}
 	
 	public static void checkForInts(Relation relation) {
-		relation.containsRelations = true;
+		//System.out.println(relation);
 	}
 	
 	public static void checkForInts(Variable variable) {
-			
+			//System.out.println(variable);
 	}
 	
 	public static void checkForInts(ConstantExpression constExpr) {	
@@ -164,7 +177,7 @@ public class AnnotateTree {
 	public static void checkForInts(BinaryExpression binExpr) {
 		callByType(binExpr.left());
 		callByType(binExpr.right());
-		binExpr.containsRelations = binExpr.left().containsRelations || binExpr.right().containsRelations;
+		//System.out.println(binExpr);
 	}
 
 	public static void checkForInts(NaryExpression expr) {
@@ -185,7 +198,6 @@ public class AnnotateTree {
 	public static void checkForInts(IntToExprCast castExpr) {
 		castExpr.isIntExpr = true;
 		callByType(castExpr.intExpr());
-		castExpr.containsRelations = castExpr.intExpr().containsRelations;
 	}
 	
 	public static void checkForInts(IntConstant intConst) {
@@ -199,8 +211,6 @@ public class AnnotateTree {
 	public static void checkForInts(ExprToIntCast intExpr) {
 		if(intExpr.op() == ExprCastOperator.SUM){
 			callByType(intExpr.expression());
-			if(intExpr.expression().containsRelations)
-				intExpr.containsRelations = true;
 		}
 	}
 
@@ -212,10 +222,7 @@ public class AnnotateTree {
 	public static void checkForInts(BinaryIntExpression intExpr) {
 		callByType(intExpr.left());
 		callByType(intExpr.right());
-		if(intExpr.left().containsRelations || intExpr.right().containsRelations)
-			intExpr.containsRelations = true;
 	}
-
 	
 	public static void checkForInts(UnaryIntExpression intExpr) {
 		

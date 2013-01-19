@@ -47,7 +47,6 @@ public abstract class Node {
 	public Expression equalExpression = null;
     public Reduction reduction = Reduction.NONE;
     public boolean isIntExpr = false;
-    public boolean containsRelations = false;
     public boolean assignmentOnLeft = true;
     /**
      * Accepts the given visitor and returns the result

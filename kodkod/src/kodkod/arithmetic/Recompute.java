@@ -161,8 +161,10 @@ public class Recompute {
 				used = true;
 				tuples.add(new TemporaryTuple(tuple.atom(0), t.right()));
 			}
-			else
+			else{
 				tuples.add(new TemporaryTuple(tuple.atom(0), 0));
+				used = false;
+			}
 		}
 		return tuples;
 	}

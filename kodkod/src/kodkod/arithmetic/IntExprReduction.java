@@ -48,38 +48,6 @@ public final class IntExprReduction {
 			intComparisonNodes.addAll(currentInequalityNodes);
 		}
 		for(ComparisonFormula cf : comparisonNodes){
-			/*XXX revert to this when everything breaks...
-			 System.out.println(cf);
-			 
-			if(cf.assignmentOnLeft){
-				Relation answer = (Relation)((BinaryExpression)cf.left()).right();
-				if(cf.right().containsRelations){
-					cf.reduction = Reduction.DELETE;
-					if(swapAnswerPairs.containsKey(answer.name())){
-						cf.equalExpression = swapAnswerPairs.get(answer.name());
-						cf.reduction=Reduction.EQUALEXPRESSIONS;
-					}
-					swapAnswerPairs.put(answer.name(), cf.right());
-					bogusVariables.add(answer);
-				}
-				else
-					cf.reduction = Reduction.COMPARISON;
-			}
-			else{//assignment on right
-				Relation answer = (Relation)((BinaryExpression)cf.right()).right();
-				if(cf.left().containsRelations){
-					cf.reduction = Reduction.DELETE;
-					if(swapAnswerPairs.containsKey(answer.name())){
-						cf.equalExpression = swapAnswerPairs.get(answer.name());
-						cf.reduction=Reduction.EQUALEXPRESSIONS;
-					}
-					swapAnswerPairs.put(answer.name(), cf.left());
-					bogusVariables.add(answer);
-				}
-				else
-					cf.reduction = Reduction.COMPARISON;
-			}
-			*/
 			Relation answer;
 			Expression expr;
 			if(cf.assignmentOnLeft){
