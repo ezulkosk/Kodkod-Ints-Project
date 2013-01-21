@@ -26,7 +26,10 @@ public class TemporaryTuple {
 	}
 	
 	
-	
+	public void setRight(int i)
+	{
+		right = i;
+	}
 	//Since the arithmetic is using 32 java ints, we need to put the solution
 	//back into the correct range in case of overflow (spurious counterexamples...)
 	//Example: bitwidth = 4, weight = x+y+z, x=y=z=6 => weight = 18 => weight = 18%16 = 2

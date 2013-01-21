@@ -41,6 +41,10 @@ public final class ComparisonFormula extends Formula{
     private final Expression right;
     private final ExprCompOperator op;
     
+    //XXX added
+    public String answer;
+    public Relation variable= null;
+    
     /**  
      * Constructs a new comparison formula: left op  right
      * 

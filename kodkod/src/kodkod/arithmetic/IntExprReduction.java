@@ -23,7 +23,7 @@ public final class IntExprReduction {
 	public HashSet<ComparisonFormula> comparisonNodes = new HashSet<ComparisonFormula>();
 	public HashSet<IntComparisonFormula> intComparisonNodes = new HashSet<IntComparisonFormula>();
 	public HashMap<String, Expression> swapAnswerPairs= new HashMap<String, Expression>();
-	public HashSet<Relation> bogusVariables = new HashSet<Relation>(); 
+	public HashSet<String> bogusVariables = new HashSet<String>();//Relation>(); 
 	
 	Formula newTree;
 	public Formula[] oldFormulas;
@@ -51,20 +51,21 @@ public final class IntExprReduction {
 			Relation answer;
 			Expression expr;
 			if(cf.assignmentOnLeft){
-				answer = (Relation)((BinaryExpression)cf.left()).right();
+				//answer = (Relation)((BinaryExpression)cf.left()).right();
+				
 				expr = cf.right();
 			}
 			else{
-				answer = (Relation)((BinaryExpression)cf.right()).right();
+				//answer = (Relation)((BinaryExpression)cf.right()).right();
 				expr = cf.left();
 			}
 			cf.reduction = Reduction.DELETE;
-			if(swapAnswerPairs.containsKey(answer.name())){
-				cf.equalExpression = swapAnswerPairs.get(answer.name());
+			if(swapAnswerPairs.containsKey(cf.answer)){//answer.name())){
+				cf.equalExpression = swapAnswerPairs.get(cf.answer);//answer.name());
 				cf.reduction=Reduction.EQUALEXPRESSIONS;
 			}
-			swapAnswerPairs.put(answer.name(), expr);
-			bogusVariables.add(answer);
+			swapAnswerPairs.put(cf.answer, expr);//answer.name(), expr);
+			bogusVariables.add(cf.answer);//answer);
 		}
 		for(IntComparisonFormula icf : intComparisonNodes){
 			icf.reduction = Reduction.INTCOMPARISON;
@@ -72,6 +73,7 @@ public final class IntExprReduction {
 		for(int i = 0; i < formulas.length; i++)
 		if(createNewTree[i]){
 			Formula f = formulas[i];
+			
 			BuildTree bt = new BuildTree(f, swapAnswerPairs);
 			newTree = (Formula)bt.build();
 			formulas[i] = newTree;

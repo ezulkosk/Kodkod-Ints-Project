@@ -42,9 +42,9 @@ public class AnnotateTree {
 	public static HashSet<IntComparisonFormula> intComparisonNodes = new HashSet<IntComparisonFormula>();
 	
 	
-	public static Variable quantVariable;
+	public static String quantVariable;
 	public static Expression quantExpression;
-	public static Multiplicity multiplicity; 
+	public static String multiplicity; 
 	
 	
 	public static void start()
@@ -102,12 +102,26 @@ public class AnnotateTree {
 		callByType(f.left());
 		callByType(f.right());
 		if(f.op() == ExprCompOperator.EQUALS && (f.left().isIntExpr || f.right().isIntExpr)){
-			System.out.println(f);
-			if(f.left() instanceof BinaryExpression) // && ((BinaryExpression)f.left()).right() instanceof Relation)
+			
+			
+			if(f.left() instanceof BinaryExpression){ // && ((BinaryExpression)f.left()).right() instanceof Relation)
 				comparisonNodes.add(f);
+				f.variable = (Relation)quantExpression;
+				System.out.println(f.variable);
+				if(multiplicity != null)
+					f.answer = (((BinaryExpression)f.left()).myToString(multiplicity.toString(), quantExpression.toString()));
+				else 
+					f.answer = (((BinaryExpression)f.left()).myToString("",""));
+					
+			}
 			else if(f.right() instanceof BinaryExpression){
 				f.assignmentOnLeft = false;
+				f.variable = (Relation)quantExpression;
 				comparisonNodes.add(f);
+				if(multiplicity != null)
+					f.answer = (((BinaryExpression)f.right()).myToString(multiplicity.toString(), quantExpression.toString()));
+				else 
+					f.answer = (((BinaryExpression)f.right()).myToString("",""));
 			}
 				
 		}
@@ -133,11 +147,13 @@ public class AnnotateTree {
 	{
 		Decls decls = f.decls();
 		Decl d = decls.get(0);
-		multiplicity = d.multiplicity();
-		quantVariable = d.variable();
+		multiplicity = d.multiplicity().toString();
+		quantVariable = d.variable().toString();
 		quantExpression = d.expression();
-		System.out.println(multiplicity+ " " + quantVariable);
 		callByType(f.formula());
+		multiplicity = null;
+		quantVariable = null;
+		quantExpression = null;
 	}
 	
 	public static void checkForInts(NaryFormula f)
@@ -175,6 +191,8 @@ public class AnnotateTree {
 	}
 	
 	public static void checkForInts(BinaryExpression binExpr) {
+		//System.out.println(multiplicity+ " " + quantVariable+ " " + quantExpression);
+
 		callByType(binExpr.left());
 		callByType(binExpr.right());
 		//System.out.println(binExpr);
@@ -236,6 +254,5 @@ public class AnnotateTree {
 	public static void checkForInts(RelationPredicate predicate) {
 		
 	}
-	
 	
 }

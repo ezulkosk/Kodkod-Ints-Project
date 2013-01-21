@@ -35,7 +35,7 @@ import kodkod.ast.SumExpression;
 import kodkod.ast.UnaryExpression;
 import kodkod.ast.UnaryIntExpression;
 import kodkod.ast.Variable;
-import kodkod.ast.operator.ExprOperator;
+import kodkod.ast.operator.ExprCastOperator;
 
 public class BuildTree {
 	public enum Replace{
@@ -48,6 +48,10 @@ public class BuildTree {
 	//static Variable variable = null;
 	static Replace replace = Replace.FALSE;
 	static HashMap<String, Expression> swapAnswerPairs;
+	
+	public static Variable quantVariable=null;
+	public static String quantExpression="";
+	public static String multiplicity=""; 
 	
 	public BuildTree(Node node,HashMap<String, Expression> swapAnswerPairs)
 	{
@@ -148,7 +152,7 @@ public class BuildTree {
 
 		
 		public static Node buildTree(BinaryExpression binExpr) {
-			if(binExpr.op() == ExprOperator.JOIN)
+			/*if(binExpr.op() == ExprOperator.JOIN)
 			{
 				if(swapAnswerPairs.containsKey(((Relation)binExpr.right()).name()))
 				{
@@ -167,6 +171,25 @@ public class BuildTree {
 			}
 			else
 				return binExpr;
+				*/
+			String answer =binExpr.myToString(multiplicity, quantExpression);
+			if(swapAnswerPairs.containsKey(answer))
+			{
+				Expression e  = swapAnswerPairs.get(answer);//((Relation)binExpr.right()).name());
+				if(e instanceof IntToExprCast){
+					if(replace == Replace.INTCOMPARISON){
+						
+						IntExpression i =(IntExpression) ((IntToExprCast)e).intExpr();
+						return ReplaceVariablesInTree.build(i, quantVariable);// binExpr.left());
+					}
+					else if(replace == Replace.COMPARISON){
+						System.out.println("CHECK THIS WHEN IT COMES UP");
+						return ReplaceVariablesInTree.build(e, ((Variable)binExpr.left()));
+					}
+				}
+			}
+			return binExpr;
+			
 		}
 
 		
@@ -213,7 +236,7 @@ public class BuildTree {
 
 		
 		public static IntExpression buildTree(ExprToIntCast intExpr) {
-			if(replace == Replace.FALSE)
+			if(replace == Replace.FALSE || intExpr.op() == ExprCastOperator.CARDINALITY)
 				return intExpr;
 			else
 			{
@@ -262,8 +285,17 @@ public class BuildTree {
 		}
 
 		public static QuantifiedFormula buildTree(QuantifiedFormula quantFormula) {	
-			return new QuantifiedFormula(quantFormula.quantifier(), 
+			Decls decls = quantFormula.decls();
+			Decl d = decls.get(0);
+			multiplicity = d.multiplicity().toString();
+			quantVariable = d.variable();
+			quantExpression = d.expression().toString();
+			QuantifiedFormula q = new QuantifiedFormula(quantFormula.quantifier(), 
 					quantFormula.decls(), (Formula)buildByType(quantFormula.formula()));
+			multiplicity = null;
+			quantVariable = null;
+			quantExpression = null;
+			return q;
 		}
 		
 		public static NaryFormula buildTree(NaryFormula formula) {

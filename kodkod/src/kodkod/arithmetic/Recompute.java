@@ -17,16 +17,18 @@ import kodkod.ast.IntToExprCast;
 import kodkod.ast.Node;
 import kodkod.ast.Node.Reduction;
 import kodkod.ast.Relation;
+import kodkod.ast.Variable;
 import kodkod.engine.Solution;
 import kodkod.instance.Instance;
 import kodkod.instance.Tuple;
 import kodkod.instance.TupleFactory;
+import kodkod.instance.TupleFactory.IntTuple;
 import kodkod.instance.TupleSet;
 import kodkod.instance.Universe;
 
 public class Recompute {
 
-	static HashSet<Relation> bogusVariables = new HashSet<Relation>();
+	static HashSet<String> bogusVariables = new HashSet<String>();
 	static Map<Relation, TupleSet> relationTuples;
 	static HashSet<ComparisonFormula> formulas;
 	static TupleFactory factory;
@@ -35,7 +37,8 @@ public class Recompute {
 	static int numberOfType = 0;
 	
 	//shouldn't be static
-	public static Solution recompute(Solution sol, TupleFactory factory, HashSet<ComparisonFormula> formulas, HashSet<Relation> bogusVariables, int bitwidth){
+	public static Solution recompute(Solution sol, TupleFactory factory, HashSet<ComparisonFormula> formulas, HashSet<String> bogusVariables, int bitwidth){
+
 		Recompute.formulas = formulas;
 		Recompute.bogusVariables = bogusVariables;
 		Recompute.factory = factory;
@@ -52,6 +55,7 @@ public class Recompute {
 		
 		for(ComparisonFormula cf: formulas)
 		{
+			/*
 			if(cf.reduction != Reduction.DELETE)
 				continue;
 			Relation answer;
@@ -70,6 +74,66 @@ public class Recompute {
 			ArrayList<TemporaryTuple> temps = computeByType(expr);
 			tempTuples.add(concat(ts, temps));
 			bogusRelations.add(answer);
+			*/
+			Expression expr;
+			if(cf.reduction != Reduction.DELETE)
+				continue;
+			TupleSet ts = relationTuples.get(cf.variable);
+			ArrayList<TemporaryTuple> temps = new ArrayList<TemporaryTuple>();
+			if(ts != null){
+				Iterator<Tuple> itr = ts.iterator();
+				
+				while(itr.hasNext()){
+					Tuple tuple = itr.next();
+					System.out.println(tuple);
+					Relation rightMostRelation = null;
+					Tuple rightMostTuple = null;
+					if(cf.assignmentOnLeft){
+						rightMostRelation = getRightMostRelation((BinaryExpression)cf.left());
+						rightMostTuple = getRightMostTuple(cf.left(), tuple);
+						expr = cf.right();
+					}
+					else{
+						rightMostRelation = getRightMostRelation((BinaryExpression)cf.right());
+						rightMostTuple = getRightMostTuple(cf.right(), tuple);
+						expr = cf.left();
+					}
+					if(rightMostTuple == null){
+						temps.add(new TemporaryTuple("",0));
+						continue;
+					}
+						
+					bogusRelations.add(rightMostRelation);
+					TemporaryTuple temp = computeByType(expr,tuple);
+					temps.add(new TemporaryTuple(rightMostTuple.atom(0), temp.right()));
+				}
+			}
+			else
+			{
+				Relation rightMostRelation = null;
+				Tuple rightMostTuple = null;
+				if(cf.assignmentOnLeft){
+					rightMostRelation = getRightMostRelation((BinaryExpression)cf.left());
+					rightMostTuple = getRightMostTuple(cf.left(), null);
+					expr = cf.right();
+				}
+				else{
+					rightMostRelation = getRightMostRelation((BinaryExpression)cf.right());
+					rightMostTuple = getRightMostTuple(cf.right(), null);
+					expr = cf.left();
+				}
+				
+				if(rightMostTuple == null){
+					temps.add(new TemporaryTuple("",0));
+				}
+				else{
+					bogusRelations.add(rightMostRelation);
+					TemporaryTuple temp = computeByType(expr,null);
+					temps.add(new TemporaryTuple(rightMostTuple.atom(0), temp.right()));
+				}
+			
+			}
+			tempTuples.add(temps);
 		}
 		boundTemporaryTuplesToBitwidth(tempTuples);
 		return computeNewSolution(sol, tempTuples);
@@ -127,11 +191,20 @@ public class Recompute {
 		//newUniverse.factory().
 		for(int i = 0; i < tempTuples.size(); i++)
 		{
-			TupleSet newTupleSet = newUniverse.factory().noneOf(2);
+			TupleSet newTupleSet = newUniverse.factory().noneOf(bogusRelations.get(i).arity());
 			for(int j = 0; j < tempTuples.get(i).size(); j++){
 				System.out.println(tempTuples.get(i));
 				System.out.println(bogusRelations.get(i));
-				newTupleSet.add(newUniverse.factory().tuple(tempTuples.get(i).get(j).left(), tempTuples.get(i).get(j).right()+""));
+				if(bogusRelations.get(i).arity() == 2){
+					newTupleSet.add(newUniverse.factory().tuple(tempTuples.get(i).get(j).left(), tempTuples.get(i).get(j).right()+""));
+				}
+				else if(bogusRelations.get(i).arity() == 1){
+					newTupleSet.add(newUniverse.factory().tuple(tempTuples.get(i).get(j).right()+""));
+				}
+				else{
+					System.out.println("BAD ARITY");
+					System.exit(1);
+				}
 				newInstance.add(bogusRelations.get(i), newTupleSet);		
 			}
 		}
@@ -141,6 +214,7 @@ public class Recompute {
 	
 	public static ArrayList<TemporaryTuple> concat(TupleSet ts, ArrayList<TemporaryTuple> tempInts)
 	{
+		/*
 		System.out.println(ts);
 		ArrayList<TemporaryTuple> tuples = new ArrayList<TemporaryTuple>();
 		Iterator<TemporaryTuple>itr = tempInts.iterator();
@@ -167,19 +241,35 @@ public class Recompute {
 			}
 		}
 		return tuples;
+		*/
+		if(tempInts.size() != ts.size())
+		{
+			System.out.println("error");
+			System.exit(1);
+		}
+		Iterator<Tuple> itr = ts.iterator();
+		Iterator<TemporaryTuple> itr2 = tempInts.iterator();
+		ArrayList<TemporaryTuple> list = new ArrayList<TemporaryTuple>();
+		while(itr.hasNext())
+		{
+			Tuple tuple = itr.next();
+			TemporaryTuple temp = itr2.next();
+			list.add(new TemporaryTuple(tuple.atom(0), temp.right()));
+		}
+		return list;
 	}
 	
-	public static ArrayList<TemporaryTuple> computeByType(Node f){
+	public static TemporaryTuple computeByType(Node f, Tuple tuple){
 		if(f instanceof IntToExprCast)
-			return compute((IntToExprCast) f);
+			return compute((IntToExprCast) f,  tuple);
 		else if(f instanceof BinaryIntExpression)
-			return compute((BinaryIntExpression) f);
+			return compute((BinaryIntExpression) f,  tuple);
 		else if(f instanceof BinaryExpression)
-			return compute((BinaryExpression) f);
+			return compute((BinaryExpression) f,  tuple);
 		else if(f instanceof ExprToIntCast)
-			return compute((ExprToIntCast) f);
+			return compute((ExprToIntCast) f,  tuple);
 		else if(f instanceof IntConstant)
-			return compute((IntConstant) f);
+			return compute((IntConstant) f,  tuple);
 		else{
 			System.out.println("Error in recompute5");
 			System.out.println(f);
@@ -187,14 +277,14 @@ public class Recompute {
 		}
 	}
 	
-	public static ArrayList<TemporaryTuple> compute(IntToExprCast f)
+	public static TemporaryTuple compute(IntToExprCast f, Tuple tuple)
 	{
-		return computeByType(f.intExpr());
+		return computeByType(f.intExpr(),  tuple);
 	}
 	
-	public static ArrayList<TemporaryTuple> compute(BinaryExpression f)
+	public static TemporaryTuple compute(BinaryExpression f, Tuple tuple)
 	{
-		TupleSet fTuples = relationTuples.get(f.right());
+		/*TupleSet fTuples = relationTuples.get(f.right());
 		Iterator<Tuple> itr = fTuples.iterator();
 		ArrayList<TemporaryTuple> tuples = new ArrayList<TemporaryTuple>();
 		while(itr.hasNext()){
@@ -203,47 +293,62 @@ public class Recompute {
 			tuples.add(new TemporaryTuple(ft.atom(0), Integer.parseInt(ft.atom(1).toString())));
 			System.out.println(ft.atom(0));
 		}
-		return tuples;
+		return tuples;*/
+		Tuple rightMostTuple = getRightMostTuple(f, tuple);
+		if(rightMostTuple == null)
+			return new TemporaryTuple("",0);
+		return new TemporaryTuple("", Integer.parseInt(rightMostTuple.atom(1).toString()));
 	}
 	
-	public static ArrayList<TemporaryTuple> compute(ExprToIntCast f)
+	public static TemporaryTuple compute(ExprToIntCast f, Tuple tuple)
 	{
 		switch(f.op()){
 		case CARDINALITY:
 			System.out.println("Error in recompute");
 			break;
 		case SUM:
-			return computeByType(f.expression());
+			return computeByType(f.expression(),  tuple);
 		default:
 			break;
 		}
 		return null;
 	}
 	
-	public static ArrayList<TemporaryTuple> compute(IntConstant f)
+	public static TemporaryTuple compute(IntConstant f, Tuple tuple)
  	{
-		System.out.println("IN" + numberOfType);
+		/*System.out.println("IN" + numberOfType);
 		ArrayList<TemporaryTuple> tempInts = new ArrayList<TemporaryTuple>();
 		for(int i = 0; i < numberOfType; i++)
 			tempInts.add(new TemporaryTuple("$" + i, f.value()));
-		return tempInts;
+		return tempInts;*/
+		return new TemporaryTuple("",f.value());
 	}
 	
-	public static ArrayList<TemporaryTuple> compute(BinaryIntExpression f)
+	public static TemporaryTuple compute(BinaryIntExpression f, Tuple tuple)
 	{
+		TemporaryTuple l, r;
 		switch(f.op()){
 		case ABS:
 			break;
 		case AND:
 			break;
 		case DIVIDE:
-			return composeArrayLists(computeByType(f.left()), '/', computeByType(f.right()));
+			l = computeByType(f.left(),  tuple);
+			r= computeByType(f.right(),  tuple);
+			l.setRight(l.right() / r.right());
+			return l;
 		case MINUS:
-			return composeArrayLists(computeByType(f.left()), '-', computeByType(f.right()));
+			l = computeByType(f.left(),  tuple);
+			r= computeByType(f.right(),  tuple);
+			l.setRight(l.right() - r.right());
+			return l;
 		case MODULO:
 			break;
 		case MULTIPLY:
-			return composeArrayLists(computeByType(f.left()), '*', computeByType(f.right()));
+			l = computeByType(f.left(),  tuple);
+			r= computeByType(f.right(),  tuple);
+			l.setRight(l.right() * r.right());
+			return l;
 		case NEG:
 			break;
 		case NOT:
@@ -251,7 +356,10 @@ public class Recompute {
 		case OR:
 			break;
 		case PLUS:
-			return composeArrayLists(computeByType(f.left()), '+', computeByType(f.right()));
+			l = computeByType(f.left(), tuple);
+			r= computeByType(f.right(),  tuple);
+			l.setRight(l.right() +r.right());
+			return l;
 		case SGN:
 			break;
 		case SHA:
@@ -373,7 +481,101 @@ public class Recompute {
 				t.rebound(bitwidth);
 	}
 	
+	public static Relation getRightMostRelation(BinaryExpression b)
+	{
+		BinaryExpression b2 = b;
+		while(!(b2.right() instanceof Relation))
+			b2 = (BinaryExpression) b2.right();
+		return (Relation)b2.right();
+	}
 	
+	
+	
+	
+	//tired hack
+	static Tuple mostRecentRight;
+	public static Tuple getRightMostTuple(Expression b, Tuple s)
+	{
+		mostRecentRight = null;
+		ArrayList<Tuple> t = getRightMostTuple_h(b,s);
+		if(t == null)
+			return null;
+		return mostRecentRight;
+	}
+	
+	
+	public static ArrayList<Tuple> getRightMostTuple_h(Expression b, Tuple s)
+	{
+		ArrayList<Tuple> tuples = new ArrayList<Tuple>();
+		if(b == null)
+			return null;
+		else if(b instanceof BinaryExpression)
+		{
+			
+			switch(((BinaryExpression)b).op()){
+			case JOIN:
+				return myJoin(getRightMostTuple_h(((BinaryExpression) b).left(), s), getRightMostTuple_h(((BinaryExpression) b).right(),s));
+			case PRODUCT:
+				return myProduct(getRightMostTuple_h(((BinaryExpression) b).left(), s), getRightMostTuple_h(((BinaryExpression) b).right(),s));
+			default:
+				System.out.println("Unsupported binaryexpression op");
+				System.exit(1);
+				break;
+			}
+			
+		}
+		else if(b instanceof Variable){
+			tuples.add(s);
+			return tuples;
+		}
+		else if(b instanceof Relation){
+			TupleSet ts = relationTuples.get((Relation)b);
+			Iterator<Tuple> itr = ts.iterator();
+			
+			while(itr.hasNext())
+				tuples.add(itr.next());
+			return tuples;
+		}
+		else
+		{
+			System.out.println("error in recompute");
+			System.exit(1);
+		}
+		return null;
+	}
+	
+	public static ArrayList<Tuple> myJoin(ArrayList<Tuple> l, ArrayList<Tuple> r)
+	{
+		if(l == null || r == null)
+			return null;
+		ArrayList<Tuple> tuples = new ArrayList<Tuple>();
+		for(Tuple t: l)
+			for(Tuple t2: r)
+			{
+				if(t.atom(t.arity()-1) == t2.atom(0)){
+					Object[] atoms = new Object[t.arity() + t2.arity()-2];
+					for(int i =0; i< t.arity()-1; i++)
+						atoms[i] = t.atom(i);
+					for(int i =1; i< t2.arity(); i++)
+						atoms[i+t.arity()-2] = t2.atom(i);
+					mostRecentRight = t2;
+					tuples.add(factory.tuple(atoms));
+					return tuples;
+				}
+			}
+		return null;
+	}
+	
+	public static ArrayList<Tuple> myProduct(ArrayList<Tuple> l, ArrayList<Tuple> r)
+	{
+		ArrayList<Tuple> tuples = new ArrayList<Tuple>();
+		for(Tuple t: l)
+			for(Tuple t2: r)
+			{
+				tuples.add(t.product(t2));
+			}
+		return tuples;
+	}
 	
 }
 	

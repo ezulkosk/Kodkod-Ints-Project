@@ -42,6 +42,18 @@ public final class BinaryExpression extends Expression {
 	private final Expression right;
 	private final int arity;
 
+	//XXX added
+	public String myToString(String mult, String expression){
+		if(this.left() instanceof BinaryExpression)
+			return ((BinaryExpression)this.left()).myToString(mult, expression) + " " + this.op() + " " +this.right();
+		else if(this.left() instanceof Variable)
+			return mult + " " + expression + " " + this.op() + " " +this.right();
+		else 
+			return this.toString();
+	}
+	
+	
+	
 	/**  
 	 * Constructs a new binary expression: left op right
 	 * 

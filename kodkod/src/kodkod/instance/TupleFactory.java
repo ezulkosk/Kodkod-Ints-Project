@@ -291,7 +291,7 @@ public final class TupleFactory {
 	 * @invariant index = sum({i: [0..arity) | TupleFactory.this.universe.index(atoms[i]) * TupleFactory.this.base^(arity - 1 - i))
 	 * @author Emina Torlak
 	 */
-	private final class IntTuple extends Tuple {
+	public final class IntTuple extends Tuple { //XXX Should be private
 		private final int arity, index;
 		
 		/**  
@@ -320,7 +320,7 @@ public final class TupleFactory {
 	     * @throws NullPointerException  atoms = null
 	     * @throws IllegalArgumentException   some a: atoms[int] | a !in universe.atoms[int]
 	     */
-	    IntTuple(final Object... atoms) {
+	     IntTuple(final Object... atoms) { 
 	        this.arity = atoms.length;
 	        checkCapacity(arity);
 	        int tempIndex = 0, multiplier = 1;

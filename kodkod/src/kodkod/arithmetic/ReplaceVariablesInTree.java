@@ -111,8 +111,7 @@ public class ReplaceVariablesInTree {
 	}
 
 	private static Node replaceVariable(Relation f) {
-		// TODO Auto-generated method stub
-		return null;
+		return f;
 	}
 
 	private static Node replaceVariable(NaryFormula f) {
@@ -126,14 +125,13 @@ public class ReplaceVariablesInTree {
 	}
 
 	private static Node replaceVariable(BinaryExpression f) {
-		if(f.left() instanceof Variable || f.left() instanceof Relation)
+		if(f.left() instanceof Variable)
 		{
 			return new BinaryExpression(variable, f.op(), f.right());
 		}
 		else
 		{
-			System.out.println("error in replace variables");
-			return null;
+			return new BinaryExpression((Expression)replaceByType(f.left()), f.op(), (Expression)replaceByType(f.right()));
 		}
 	}
 
