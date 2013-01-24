@@ -2,12 +2,14 @@ package kodkod.arithmetic;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
-import kodkod.ast.BinaryExpression;
 import kodkod.ast.ComparisonFormula;
 import kodkod.ast.Expression;
 import kodkod.ast.Formula;
 import kodkod.ast.IntComparisonFormula;
+import kodkod.ast.IntConstant;
+import kodkod.ast.IntToExprCast;
 import kodkod.ast.Node.Reduction;
 import kodkod.ast.Relation;
 import kodkod.engine.Solution;
@@ -60,6 +62,15 @@ public final class IntExprReduction {
 				expr = cf.left();
 			}
 			cf.reduction = Reduction.DELETE;
+			//check if expr is a constant
+			if(expr instanceof IntToExprCast)
+				if(((IntToExprCast)expr).intExpr() instanceof IntConstant)
+				{
+					cf.reduction = Reduction.INTCONSTANT;
+					swapAnswerPairs.put(cf.answer, expr);
+					continue;
+				}
+			
 			if(swapAnswerPairs.containsKey(cf.answer)){//answer.name())){
 				cf.equalExpression = swapAnswerPairs.get(cf.answer);//answer.name());
 				cf.reduction=Reduction.EQUALEXPRESSIONS;
@@ -70,16 +81,37 @@ public final class IntExprReduction {
 		for(IntComparisonFormula icf : intComparisonNodes){
 			icf.reduction = Reduction.INTCOMPARISON;
 		}
+		int count = 0;
+		for(int i = 0; i < createNewTree.length; i++)
+			if(createNewTree[i])
+				count++;
+		
 		for(int i = 0; i < formulas.length; i++)
-		if(createNewTree[i]){
-			Formula f = formulas[i];
-			
-			BuildTree bt = new BuildTree(f, swapAnswerPairs);
-			newTree = (Formula)bt.build();
-			formulas[i] = newTree;
+		{
+			if(formulas[i].toString().contains("this/c532_total_RampUpTime.c532_total_RampUpTime_ref")){
+				Formula temp = formulas[i];
+				
+				System.out.print(temp);
+			}
 		}
 		
+		for(int i = 0; i < formulas.length; i++)
+			if(createNewTree[i]){
+				Formula f = formulas[i];
+				
+				//BuildTree bt = new BuildTree(f, swapAnswerPairs);
+				BuildTree bt = new BuildTree(f,swapAnswerPairs);
+				newTree = (Formula)bt.build();
+				if(!f.toString().equals(newTree.toString()))
+					System.out.print("count"+count);
+				formulas[i] = newTree;
+			}
+		
 		return formulas;
+	}
+	//XXX this was added in moolloy
+	public Formula[] resume(Formula...formulas){
+		return reduceIntExpressions(formulas);
 	}
 	
 	public void solve(Formula formula, Bounds bounds, TupleFactory factory, Universe universe, int bitwidth)
@@ -93,6 +125,11 @@ public final class IntExprReduction {
 		System.out.println("Solving...");
 		System.out.flush();
 		Solution sol = solver.solve(formula,bounds);
+		/*Iterator<Relation> itr = sol.instance().relationTuples().keySet().iterator();
+		while(itr.hasNext()){
+			Relation r = itr.next();
+			System.out.println(r + ":: " +sol.instance().relationTuples().get(r));
+		}*/
 		System.out.println(sol.toString());
 		
 		System.out.println(Recompute.recompute(sol, factory, comparisonNodes, bogusVariables, bitwidth).toString());

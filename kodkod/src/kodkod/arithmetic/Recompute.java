@@ -1,7 +1,6 @@
 package kodkod.arithmetic;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,14 +16,19 @@ import kodkod.ast.IntToExprCast;
 import kodkod.ast.Node;
 import kodkod.ast.Node.Reduction;
 import kodkod.ast.Relation;
+import kodkod.ast.UnaryExpression;
 import kodkod.ast.Variable;
 import kodkod.engine.Solution;
+import kodkod.engine.bool.Int;
+import kodkod.instance.Bounds;
 import kodkod.instance.Instance;
 import kodkod.instance.Tuple;
 import kodkod.instance.TupleFactory;
-import kodkod.instance.TupleFactory.IntTuple;
 import kodkod.instance.TupleSet;
 import kodkod.instance.Universe;
+import kodkod.util.ints.IntIterator;
+import kodkod.util.ints.IntSet;
+
 
 public class Recompute {
 
@@ -35,6 +39,7 @@ public class Recompute {
 	static int bitwidth;
 	static ArrayList<Relation> bogusRelations = new ArrayList<Relation>();
 	static int numberOfType = 0;
+	
 	
 	//shouldn't be static
 	public static Solution recompute(Solution sol, TupleFactory factory, HashSet<ComparisonFormula> formulas, HashSet<String> bogusVariables, int bitwidth){
@@ -55,26 +60,6 @@ public class Recompute {
 		
 		for(ComparisonFormula cf: formulas)
 		{
-			/*
-			if(cf.reduction != Reduction.DELETE)
-				continue;
-			Relation answer;
-			Expression expr;
-			if(cf.assignmentOnLeft){
-				answer = (Relation)((BinaryExpression)cf.left()).right();
-				expr = cf.right();
-			}
-			else{
-				answer = (Relation)((BinaryExpression)cf.right()).right();
-				expr = cf.left();
-			}
-			System.out.println("C" + answer);
-			TupleSet ts = relationTuples.get(answer);
-			numberOfType = ts.size();
-			ArrayList<TemporaryTuple> temps = computeByType(expr);
-			tempTuples.add(concat(ts, temps));
-			bogusRelations.add(answer);
-			*/
 			Expression expr;
 			if(cf.reduction != Reduction.DELETE)
 				continue;
@@ -82,10 +67,10 @@ public class Recompute {
 			ArrayList<TemporaryTuple> temps = new ArrayList<TemporaryTuple>();
 			if(ts != null){
 				Iterator<Tuple> itr = ts.iterator();
-				
+				//Tuple test  = getRightMostTuple((BinaryExpression)cf.left(), null);
 				while(itr.hasNext()){
 					Tuple tuple = itr.next();
-					System.out.println(tuple);
+					//System.out.println(tuple);
 					Relation rightMostRelation = null;
 					Tuple rightMostTuple = null;
 					if(cf.assignmentOnLeft){
@@ -138,7 +123,7 @@ public class Recompute {
 		boundTemporaryTuplesToBitwidth(tempTuples);
 		return computeNewSolution(sol, tempTuples);
 	}
-	
+	/*
 	//Creates the new solution with the corrected values for "dependent variables"
 	//Essentially a copy of the old Solution, but with a new Instance
 	//This method can probably simplified a lot, but I had trouble creating tuples, etc. due to Universe errors.. 
@@ -148,6 +133,93 @@ public class Recompute {
 		Universe oldUniverse = oldInstance.universe();
 		Iterator<Object> itr = oldUniverse.iterator();
 		ArrayList<Object> newUniverseList = new ArrayList<Object>();
+		
+		while(itr.hasNext())
+			newUniverseList.add(itr.next());
+		for(ArrayList<TemporaryTuple> a: tempTuples)
+			for(TemporaryTuple t: a)
+				if(!newUniverseList.contains(t.right()+""))
+					newUniverseList.add(t.right()+"");
+		
+		Universe newUniverse = new Universe(newUniverseList);
+		IntSet set = oldInstance.ints();
+		IntIterator intitr = set.iterator();
+		Bounds b = new Bounds(newUniverse);
+		while(intitr.hasNext()){
+			TupleFactory factory = newUniverse.factory();
+			int i = intitr.next();
+			
+			b.boundExactly(i, factory.range(factory.tuple(i+"" ),factory.tuple( i+"" )));
+		
+		}	
+		
+		Instance newInstance = new Instance(newUniverse);
+		Set<Relation> keys =  relationTuples.keySet();
+		Iterator<Relation> itr2 = keys.iterator();
+		
+		newInstance.ints = b.intBounds();
+		while(itr2.hasNext()){
+			Relation r = itr2.next();
+			TupleSet ts = relationTuples.get(r);
+			if(!bogusVariables.contains(r))
+			{
+				Iterator<Tuple> itr3 = ts.iterator();
+				TupleSet newTupleSet = newUniverse.factory().noneOf(ts.arity());
+				while(itr3.hasNext())
+				{
+					Tuple next = itr3.next();
+					Tuple newTuple;
+					if(ts.arity() == 1)
+						newTuple = newUniverse.factory().tuple(next.atom(0));
+					else
+						newTuple = newUniverse.factory().tuple(next.atom(0), next.atom(1));
+					newTupleSet.add(newTuple);
+					
+					
+				}
+				newInstance.add(r, newTupleSet);
+			}
+		}
+		
+		
+		
+		for(int i = 0; i < tempTuples.size(); i++)
+		{
+			TupleSet newTupleSet = newUniverse.factory().noneOf(bogusRelations.get(i).arity());
+			for(int j = 0; j < tempTuples.get(i).size(); j++){
+				//System.out.println(tempTuples.get(i));
+				//System.out.println(bogusRelations.get(i));
+				if(bogusRelations.get(i).arity() == 2){
+					newTupleSet.add(newUniverse.factory().tuple(tempTuples.get(i).get(j).left(), tempTuples.get(i).get(j).right()+""));
+				}
+				else if(bogusRelations.get(i).arity() == 1){
+					newTupleSet.add(newUniverse.factory().tuple(tempTuples.get(i).get(j).right()+""));
+				}
+				else{
+					System.out.println("BAD ARITY");
+					System.exit(1);
+				}
+				newInstance.add(bogusRelations.get(i), newTupleSet);		
+			}
+		}
+		return new Solution(oldSolution.outcome(), oldSolution.stats(), newInstance, oldSolution.proof());
+	}
+	*/
+	//Creates the new solution with the corrected values for "dependent variables"
+	//Essentially a copy of the old Solution, but with a new Instance
+	//This method can probably simplified a lot, but I had trouble creating tuples, etc. due to Universe errors.. 
+	public static Solution computeNewSolution(Solution oldSolution, ArrayList<ArrayList<TemporaryTuple>> tempTuples)
+	{
+		Instance oldInstance = oldSolution.instance();
+		Universe oldUniverse = oldInstance.universe();
+		Iterator<Object> itr = oldUniverse.iterator();
+		ArrayList<Object> newUniverseList = new ArrayList<Object>();
+		ArrayList<String> newInts = new ArrayList<String>();
+		//XXX this function changed for moolloy, should be ok
+		
+		
+		
+		//////////
 		
 		while(itr.hasNext())
 			newUniverseList.add(itr.next());
@@ -167,9 +239,7 @@ public class Recompute {
 			if(!bogusVariables.contains(r))
 			{
 				Iterator<Tuple> itr3 = ts.iterator();
-				//System.out.println(ts);
 				TupleSet newTupleSet = newUniverse.factory().noneOf(ts.arity());
-				//System.out.println("\n"+ r + " " + ts + " " + ts.arity());
 				while(itr3.hasNext())
 				{
 					Tuple next = itr3.next();
@@ -178,23 +248,19 @@ public class Recompute {
 						newTuple = newUniverse.factory().tuple(next.atom(0));
 					else
 						newTuple = newUniverse.factory().tuple(next.atom(0), next.atom(1));
-					//System.out.println(newTuple);
 					newTupleSet.add(newTuple);
 					
 					
 				}
 				newInstance.add(r, newTupleSet);
 			}
-			//newUniverse.factory()
 		}
-		//for(int i = 0; i < )
-		//newUniverse.factory().
 		for(int i = 0; i < tempTuples.size(); i++)
 		{
 			TupleSet newTupleSet = newUniverse.factory().noneOf(bogusRelations.get(i).arity());
 			for(int j = 0; j < tempTuples.get(i).size(); j++){
-				System.out.println(tempTuples.get(i));
-				System.out.println(bogusRelations.get(i));
+				//System.out.println(tempTuples.get(i));
+				//System.out.println(bogusRelations.get(i));
 				if(bogusRelations.get(i).arity() == 2){
 					newTupleSet.add(newUniverse.factory().tuple(tempTuples.get(i).get(j).left(), tempTuples.get(i).get(j).right()+""));
 				}
@@ -205,43 +271,45 @@ public class Recompute {
 					System.out.println("BAD ARITY");
 					System.exit(1);
 				}
-				newInstance.add(bogusRelations.get(i), newTupleSet);		
+				newInstance.add(bogusRelations.get(i), newTupleSet);
+				String newInt = /*Integer.parseInt(*/(String)newTupleSet.iterator().next().atom(newTupleSet.arity()-1);
+				//b.boundExactly(newInt, factory.range(factory.tuple(newInt+"" ),factory.tuple( newInt+"" )));
+				newInts.add(newInt);
 			}
 		}
-		//System.out.println(newInstance);
-		return new Solution(oldSolution.outcome(), oldSolution.stats(), newInstance, oldSolution.proof());
+		//newInstance.ints = b.intBounds();
+		
+		//XXX hack this can probably be done differently
+		for(String s: newInts)
+			if(!newUniverseList.contains(s))
+				newUniverseList.add(s);
+		Universe lastUniverse = new Universe(newUniverseList);
+		TupleFactory lastFactory = lastUniverse.factory();
+		//Bounds b = new Bounds(lastUniverse);
+		Bounds b = new Bounds(lastUniverse);
+		IntSet set = oldInstance.ints();
+		IntIterator intitr = set.iterator();
+		while(intitr.hasNext()){
+			//TupleFactory factory = newUniverse.factory();
+			int i = intitr.next();
+			b.boundExactly(i, lastFactory.range(lastFactory.tuple(i+"" ),lastFactory.tuple( i+"" )));
+		}	
+		
+		for(String s: newInts){
+			//TupleFactory factory = newUniverse.factory();
+			b.boundExactly(Integer.parseInt(s), lastFactory.range(lastFactory.tuple(s),lastFactory.tuple( s)));
+		}
+		newInstance.ints = b.intBounds();
+		Instance lastInstance = new Instance(lastUniverse, newInstance.tuples, b.intBounds());
+		
+		///System.out.println(lastInstance);
+		
+		return new Solution(oldSolution.outcome(), oldSolution.stats(), lastInstance, oldSolution.proof());
 	}
+	
 	
 	public static ArrayList<TemporaryTuple> concat(TupleSet ts, ArrayList<TemporaryTuple> tempInts)
 	{
-		/*
-		System.out.println(ts);
-		ArrayList<TemporaryTuple> tuples = new ArrayList<TemporaryTuple>();
-		Iterator<TemporaryTuple>itr = tempInts.iterator();
-		Iterator<Tuple>itr2 = ts.iterator();
-		boolean used = true;
-		TemporaryTuple t = null;
-		int index=-1, index2;
-		while(itr2.hasNext()){
-			if(used && itr.hasNext()){
-				t = itr.next();
-				String[] splits = t.left.toString().split("\\$");
-				index = Integer.parseInt(splits[splits.length-1]);
-			}
-			Tuple tuple = itr2.next();
-			String[] splits2 = tuple.atom(0).toString().split("\\$");
-			index2 = Integer.parseInt(splits2[splits2.length-1]);
-			if(index == index2){
-				used = true;
-				tuples.add(new TemporaryTuple(tuple.atom(0), t.right()));
-			}
-			else{
-				tuples.add(new TemporaryTuple(tuple.atom(0), 0));
-				used = false;
-			}
-		}
-		return tuples;
-		*/
 		if(tempInts.size() != ts.size())
 		{
 			System.out.println("error");
@@ -284,16 +352,6 @@ public class Recompute {
 	
 	public static TemporaryTuple compute(BinaryExpression f, Tuple tuple)
 	{
-		/*TupleSet fTuples = relationTuples.get(f.right());
-		Iterator<Tuple> itr = fTuples.iterator();
-		ArrayList<TemporaryTuple> tuples = new ArrayList<TemporaryTuple>();
-		while(itr.hasNext()){
-			Tuple ft = itr.next();
-			System.out.println(ft.atom(1));
-			tuples.add(new TemporaryTuple(ft.atom(0), Integer.parseInt(ft.atom(1).toString())));
-			System.out.println(ft.atom(0));
-		}
-		return tuples;*/
 		Tuple rightMostTuple = getRightMostTuple(f, tuple);
 		if(rightMostTuple == null)
 			return new TemporaryTuple("",0);
@@ -316,11 +374,6 @@ public class Recompute {
 	
 	public static TemporaryTuple compute(IntConstant f, Tuple tuple)
  	{
-		/*System.out.println("IN" + numberOfType);
-		ArrayList<TemporaryTuple> tempInts = new ArrayList<TemporaryTuple>();
-		for(int i = 0; i < numberOfType; i++)
-			tempInts.add(new TemporaryTuple("$" + i, f.value()));
-		return tempInts;*/
 		return new TemporaryTuple("",f.value());
 	}
 	
@@ -380,16 +433,10 @@ public class Recompute {
 	
 	public static ArrayList<TemporaryTuple> composeArrayLists(ArrayList<TemporaryTuple> left, char op, ArrayList<TemporaryTuple> right)
 	{
-		//if(left.size() != right.size() || left.size() == 0){
-		//	System.out.println("Error in recompute3333");
-		//	return null;
-		//}
-		
 		ArrayList<TemporaryTuple> vals = new ArrayList<TemporaryTuple>();
 		Iterator<TemporaryTuple> litr = left.iterator();
 		Iterator<TemporaryTuple> ritr = right.iterator();
 		int lor = 0;
-		//ArrayList<TemporaryTuple> sorted = new ArrayList<TemporaryTuple> sorted;
 		TemporaryTuple l=null,r=null;
 		while(litr.hasNext() && ritr.hasNext())
 		{
@@ -404,8 +451,8 @@ public class Recompute {
 			
 			String[] ltemp = l.left.toString().split("\\$");
 			String[] rtemp = r.left.toString().split("\\$");
-			System.out.println(Arrays.toString(ltemp));
-			System.out.println(Arrays.toString(rtemp));
+			//System.out.println(Arrays.toString(ltemp));
+			//System.out.println(Arrays.toString(rtemp));
 			int lindex = Integer.parseInt(ltemp[ltemp.length-1]);
 			int rindex = Integer.parseInt(rtemp[rtemp.length-1]);
 			
@@ -446,29 +493,6 @@ public class Recompute {
 			vals.add(litr.next());
 		while(ritr.hasNext())
 			vals.add(ritr.next());
-		
-		/*
-		switch(op){
-		case '+':
-			for(int i = 0; i < left.size(); i++)
-				vals.add(new TemporaryTuple("$" + i,left.get(i).right() + right.get(i).right()));
-			break;
-		case '-':
-			for(int i = 0; i < left.size(); i++)
-				vals.add(new TemporaryTuple("$" + i,left.get(i).right() - right.get(i).right()));
-			break;
-		case '*':
-			for(int i = 0; i < left.size(); i++)
-				vals.add(new TemporaryTuple("$" + i,left.get(i).right()* right.get(i).right()));
-			break;
-		case '/':
-			for(int i = 0; i < left.size(); i++)
-				vals.add(new TemporaryTuple("$" + i,left.get(i).right() / right.get(i).right()));
-			break;
-		default:
-			System.out.println("Error in recompute");
-		}
-		*/
 		return vals;
 	}
 	
@@ -536,9 +560,54 @@ public class Recompute {
 				tuples.add(itr.next());
 			return tuples;
 		}
+		else if(b instanceof UnaryExpression)
+		{
+			switch(((UnaryExpression)b).op()){
+			case CLOSURE:
+				System.exit(1);
+				break;
+			case DIFFERENCE:
+				System.exit(1);
+				break;		
+			case INTERSECTION: 
+				System.exit(1);
+				break;
+			case JOIN:			
+				System.exit(1);
+				break;
+			case OVERRIDE:		
+				System.exit(1);
+				break;
+			case PRODUCT:			
+				System.exit(1);
+				break;
+			case REFLEXIVE_CLOSURE:	
+				System.exit(1);
+				break;
+			case TRANSPOSE:		//XXX might need to be elaborated
+				Expression untrans = ((UnaryExpression)b).expression();
+				TupleSet ts = relationTuples.get(untrans);
+				Iterator<Tuple> itr = ts.iterator();	
+				while(itr.hasNext())
+				{
+					Tuple t = itr.next();
+					Object[] o = new Object[t.arity()];
+					for(int i = 0; i < t.arity(); i++)
+						o[t.arity()-1-i] = t.atom(i);
+					Tuple t2 = factory.tuple(o); 
+					tuples.add(t2);
+				}
+				return tuples;
+			case UNION:
+				System.exit(1);
+				break;
+			default:
+				break;
+			}
+		}
 		else
 		{
-			System.out.println("error in recompute");
+			System.out.println("error in recompute3");
 			System.exit(1);
 		}
 		return null;

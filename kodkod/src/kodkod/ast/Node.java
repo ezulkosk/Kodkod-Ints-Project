@@ -42,7 +42,7 @@ public abstract class Node {
 		REPLACE,
 		SWAPVARIABLES,
 		NONE, 
-		COMPARISON, EQUALEXPRESSIONS,INTCOMPARISON
+		COMPARISON, EQUALEXPRESSIONS,INTCOMPARISON, INTCONSTANT
 	};
 	public Expression equalExpression = null;
     public Reduction reduction = Reduction.NONE;

@@ -84,12 +84,8 @@ import kodkod.engine.config.Options;
       one (this/c1_IMeasurable.r_c2_performance . show_this)) && 
     some (this/c101_simpleConfig . this/c3_Apache.r_c4_Base) && 
     no (this/c101_simpleConfig . this/c3_Apache.r_c10_HostnameLookups) && 
-    no (this/c101_simpleConfig . this/c3_Apache.r_c23_EnableSendfile) && 
-    no (this/c101_simpleConfig . this/c3_Apache.r_c57_Handle) && 
-    no (this/c101_simpleConfig . this/c3_Apache.r_c29_FollowSymLinks) && 
-    no (this/c101_simpleConfig . this/c3_Apache.r_c17_KeepAlive) && 
-    no (this/c101_simpleConfig . this/c3_Apache.r_c42_ExtendedStatus) && 
     some (this/c101_simpleConfig . this/c3_Apache.r_c49_InMemory) && 
+    no (this/c101_simpleConfig . this/c3_Apache.r_c17_KeepAlive) && 
     (all show_this: this/c101_simpleConfig | 
       one (show_this . this/c3_Apache.r_c4_Base) && 
       (show_this . this/c3_Apache.r_c4_Base) in this/c4_Base) && 
@@ -135,32 +131,6 @@ import kodkod.engine.config.Options;
       (show_this . this/c3_Apache.r_c63_total_performance) in 
       this/c63_total_performance) && 
     (this/c3_Apache.r_c63_total_performance . univ) in this/c101_simpleConfig && 
-    (all show_this: this/c101_simpleConfig | 
-      ((show_this . this/c3_Apache.r_c63_total_performance) . 
-      this/c63_total_performance.c63_total_performance_ref) = Int[int[((
-      show_this . this/c3_Apache.r_c4_Base) . 
-      this/c1_IMeasurable.r_c2_performance) . 
-      this/c2_performance.c2_performance_ref] + int[((show_this . 
-      this/c3_Apache.r_c10_HostnameLookups) . 
-      this/c1_IMeasurable.r_c2_performance) . 
-      this/c2_performance.c2_performance_ref] + int[((show_this . 
-      this/c3_Apache.r_c17_KeepAlive) . this/c1_IMeasurable.r_c2_performance) . 
-      this/c2_performance.c2_performance_ref] + int[((show_this . 
-      this/c3_Apache.r_c23_EnableSendfile) . 
-      this/c1_IMeasurable.r_c2_performance) . 
-      this/c2_performance.c2_performance_ref] + int[((show_this . 
-      this/c3_Apache.r_c29_FollowSymLinks) . 
-      this/c1_IMeasurable.r_c2_performance) . 
-      this/c2_performance.c2_performance_ref] + int[((show_this . 
-      this/c3_Apache.r_c35_AccessLog) . this/c1_IMeasurable.r_c2_performance) . 
-      this/c2_performance.c2_performance_ref] + int[((show_this . 
-      this/c3_Apache.r_c42_ExtendedStatus) . 
-      this/c1_IMeasurable.r_c2_performance) . 
-      this/c2_performance.c2_performance_ref] + int[((show_this . 
-      this/c3_Apache.r_c49_InMemory) . this/c1_IMeasurable.r_c2_performance) . 
-      this/c2_performance.c2_performance_ref] + int[((show_this . 
-      this/c3_Apache.r_c57_Handle) . this/c1_IMeasurable.r_c2_performance) . 
-      this/c2_performance.c2_performance_ref]]) && 
     (all show_this: this/c63_total_performance | 
       one (show_this . this/c63_total_performance.c63_total_performance_ref) && 
       (show_this . this/c63_total_performance.c63_total_performance_ref) in ints
@@ -168,7 +138,39 @@ import kodkod.engine.config.Options;
     (this/c63_total_performance.c63_total_performance_ref . univ) in 
     this/c63_total_performance && 
     (all show_this: this/c63_total_performance | 
-      one (this/c3_Apache.r_c63_total_performance . show_this)) && 
+      one (this/c3_Apache.r_c63_total_performance . show_this) && 
+      (show_this . this/c63_total_performance.c63_total_performance_ref) = Int[
+      int[(((show_this . ~this/c3_Apache.r_c63_total_performance) . 
+      this/c3_Apache.r_c4_Base) . this/c1_IMeasurable.r_c2_performance) . 
+      this/c2_performance.c2_performance_ref] + int[(((show_this . ~
+      this/c3_Apache.r_c63_total_performance) . 
+      this/c3_Apache.r_c10_HostnameLookups) . 
+      this/c1_IMeasurable.r_c2_performance) . 
+      this/c2_performance.c2_performance_ref] + int[(((show_this . ~
+      this/c3_Apache.r_c63_total_performance) . this/c3_Apache.r_c17_KeepAlive) . 
+      this/c1_IMeasurable.r_c2_performance) . 
+      this/c2_performance.c2_performance_ref] + int[(((show_this . ~
+      this/c3_Apache.r_c63_total_performance) . 
+      this/c3_Apache.r_c23_EnableSendfile) . 
+      this/c1_IMeasurable.r_c2_performance) . 
+      this/c2_performance.c2_performance_ref] + int[(((show_this . ~
+      this/c3_Apache.r_c63_total_performance) . 
+      this/c3_Apache.r_c29_FollowSymLinks) . 
+      this/c1_IMeasurable.r_c2_performance) . 
+      this/c2_performance.c2_performance_ref] + int[(((show_this . ~
+      this/c3_Apache.r_c63_total_performance) . this/c3_Apache.r_c35_AccessLog) . 
+      this/c1_IMeasurable.r_c2_performance) . 
+      this/c2_performance.c2_performance_ref] + int[(((show_this . ~
+      this/c3_Apache.r_c63_total_performance) . 
+      this/c3_Apache.r_c42_ExtendedStatus) . 
+      this/c1_IMeasurable.r_c2_performance) . 
+      this/c2_performance.c2_performance_ref] + int[(((show_this . ~
+      this/c3_Apache.r_c63_total_performance) . this/c3_Apache.r_c49_InMemory) . 
+      this/c1_IMeasurable.r_c2_performance) . 
+      this/c2_performance.c2_performance_ref] + int[(((show_this . ~
+      this/c3_Apache.r_c63_total_performance) . this/c3_Apache.r_c57_Handle) . 
+      this/c1_IMeasurable.r_c2_performance) . 
+      this/c2_performance.c2_performance_ref]]) && 
     Int/min = Int/min && 
     Int/zero = Int/zero && 
     Int/max = Int/max && 
@@ -242,12 +244,14 @@ Relation x29 = Relation.nary("this/c3_Apache.r_c63_total_performance", 2);
 Relation x30 = Relation.nary("this/c63_total_performance.c63_total_performance_ref", 2);
 
 List<String> atomlist = Arrays.asList(
- "-1", "-2", "0", "1", "c101_simpleConfig$0",
- "c2_performance$0", "c2_performance$1", "c2_performance$2", "c35_AccessLog$2", "c49_InMemory$2", "c4_Base$2",
- "c63_total_performance$2", "unused0", "unused1", "unused10", "unused11", "unused12",
- "unused13", "unused14", "unused15", "unused16", "unused17", "unused18",
- "unused19", "unused2", "unused20", "unused21", "unused22", "unused23",
- "unused24", "unused25", "unused3", "unused4", "unused5", "unused6",
+ "-1", "-2", "-3", "-4", "-5",
+ "-6", "-7", "-8", "0", "1", "2",
+ "3", "4", "5", "6", "7", "c101_simpleConfig$0",
+ "c2_performance$1", "c2_performance$2", "c49_InMemory$2", "c4_Base$2", "c63_total_performance$2", "unused0",
+ "unused1", "unused10", "unused11", "unused12", "unused13", "unused14",
+ "unused15", "unused16", "unused17", "unused18", "unused19", "unused2",
+ "unused20", "unused21", "unused22", "unused23", "unused24", "unused25",
+ "unused26", "unused27", "unused3", "unused4", "unused5", "unused6",
  "unused7", "unused8", "unused9"
 );
 
@@ -256,7 +260,7 @@ TupleFactory factory = universe.factory();
 Bounds bounds = new Bounds(universe);
 
 TupleSet x0_upper = factory.noneOf(1);
-x0_upper.add(factory.tuple("-2"));
+x0_upper.add(factory.tuple("-8"));
 bounds.boundExactly(x0, x0_upper);
 
 TupleSet x1_upper = factory.noneOf(1);
@@ -264,17 +268,32 @@ x1_upper.add(factory.tuple("0"));
 bounds.boundExactly(x1, x1_upper);
 
 TupleSet x2_upper = factory.noneOf(1);
-x2_upper.add(factory.tuple("1"));
+x2_upper.add(factory.tuple("7"));
 bounds.boundExactly(x2, x2_upper);
 
 TupleSet x3_upper = factory.noneOf(2);
+x3_upper.add(factory.tuple("-8").product(factory.tuple("-7")));
+x3_upper.add(factory.tuple("-7").product(factory.tuple("-6")));
+x3_upper.add(factory.tuple("-6").product(factory.tuple("-5")));
+x3_upper.add(factory.tuple("-5").product(factory.tuple("-4")));
+x3_upper.add(factory.tuple("-4").product(factory.tuple("-3")));
+x3_upper.add(factory.tuple("-3").product(factory.tuple("-2")));
 x3_upper.add(factory.tuple("-2").product(factory.tuple("-1")));
 x3_upper.add(factory.tuple("-1").product(factory.tuple("0")));
 x3_upper.add(factory.tuple("0").product(factory.tuple("1")));
+x3_upper.add(factory.tuple("1").product(factory.tuple("2")));
+x3_upper.add(factory.tuple("2").product(factory.tuple("3")));
+x3_upper.add(factory.tuple("3").product(factory.tuple("4")));
+x3_upper.add(factory.tuple("4").product(factory.tuple("5")));
+x3_upper.add(factory.tuple("5").product(factory.tuple("6")));
+x3_upper.add(factory.tuple("6").product(factory.tuple("7")));
 bounds.boundExactly(x3, x3_upper);
 
 TupleSet x4_upper = factory.noneOf(1);
 x4_upper.add(factory.tuple("0"));
+x4_upper.add(factory.tuple("1"));
+x4_upper.add(factory.tuple("2"));
+x4_upper.add(factory.tuple("3"));
 bounds.boundExactly(x4, x4_upper);
 
 TupleSet x5_upper = factory.noneOf(1);
@@ -313,29 +332,29 @@ bounds.bound(x10, x10_upper);
 TupleSet x11_upper = factory.noneOf(1);
 x11_upper.add(factory.tuple("unused14"));
 x11_upper.add(factory.tuple("unused15"));
-x11_upper.add(factory.tuple("c35_AccessLog$2"));
+x11_upper.add(factory.tuple("unused16"));
 bounds.bound(x11, x11_upper);
 
 TupleSet x12_upper = factory.noneOf(1);
-x12_upper.add(factory.tuple("unused16"));
 x12_upper.add(factory.tuple("unused17"));
 x12_upper.add(factory.tuple("unused18"));
+x12_upper.add(factory.tuple("unused19"));
 bounds.bound(x12, x12_upper);
 
 TupleSet x13_upper = factory.noneOf(1);
-x13_upper.add(factory.tuple("unused19"));
 x13_upper.add(factory.tuple("unused20"));
+x13_upper.add(factory.tuple("unused21"));
 x13_upper.add(factory.tuple("c49_InMemory$2"));
 bounds.bound(x13, x13_upper);
 
 TupleSet x14_upper = factory.noneOf(1);
-x14_upper.add(factory.tuple("unused21"));
 x14_upper.add(factory.tuple("unused22"));
 x14_upper.add(factory.tuple("unused23"));
+x14_upper.add(factory.tuple("unused24"));
 bounds.bound(x14, x14_upper);
 
 TupleSet x15_upper = factory.noneOf(1);
-x15_upper.add(factory.tuple("c2_performance$0"));
+x15_upper.add(factory.tuple("unused25"));
 x15_upper.add(factory.tuple("c2_performance$1"));
 x15_upper.add(factory.tuple("c2_performance$2"));
 bounds.bound(x15, x15_upper);
@@ -345,108 +364,144 @@ x16_upper.add(factory.tuple("c101_simpleConfig$0"));
 bounds.boundExactly(x16, x16_upper);
 
 TupleSet x17_upper = factory.noneOf(1);
-x17_upper.add(factory.tuple("unused24"));
-x17_upper.add(factory.tuple("unused25"));
+x17_upper.add(factory.tuple("unused26"));
+x17_upper.add(factory.tuple("unused27"));
 x17_upper.add(factory.tuple("c63_total_performance$2"));
 bounds.bound(x17, x17_upper);
 
 TupleSet x18_upper = factory.noneOf(2);
-x18_upper.add(factory.tuple("unused0").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused0").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused0").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused0").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused1").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused1").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused1").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused1").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("c4_Base$2").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("c4_Base$2").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("c4_Base$2").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("c4_Base$2").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused2").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused2").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused2").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused2").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused3").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused3").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused3").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused3").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused4").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused4").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused4").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused4").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused5").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused5").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused5").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused5").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused6").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused6").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused6").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused6").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused7").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused7").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused7").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused7").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused8").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused8").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused8").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused8").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused9").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused9").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused9").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused9").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused10").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused10").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused10").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused10").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused11").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused11").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused11").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused11").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused12").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused12").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused12").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused12").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused13").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused13").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused13").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused13").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused14").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused14").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused14").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused14").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused15").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused15").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused15").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused15").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("c35_AccessLog$2").product(factory.tuple("c2_performance$0")));
-x18_upper.add(factory.tuple("c35_AccessLog$2").product(factory.tuple("c2_performance$1")));
-x18_upper.add(factory.tuple("c35_AccessLog$2").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused16").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused16").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused16").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused16").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused17").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused17").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused17").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused17").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused18").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused18").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused18").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused18").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused19").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused19").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused19").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused19").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused20").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused20").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused20").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused20").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("c49_InMemory$2").product(factory.tuple("c2_performance$0")));
-x18_upper.add(factory.tuple("c49_InMemory$2").product(factory.tuple("c2_performance$1")));
-x18_upper.add(factory.tuple("c49_InMemory$2").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused21").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused21").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused21").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused21").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused22").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("c49_InMemory$2").product(factory.tuple("unused25")));
+x18_upper.add(factory.tuple("c49_InMemory$2").product(factory.tuple("c2_performance$1")));
+x18_upper.add(factory.tuple("c49_InMemory$2").product(factory.tuple("c2_performance$2")));
+x18_upper.add(factory.tuple("unused22").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused22").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused22").product(factory.tuple("c2_performance$2")));
-x18_upper.add(factory.tuple("unused23").product(factory.tuple("c2_performance$0")));
+x18_upper.add(factory.tuple("unused23").product(factory.tuple("unused25")));
 x18_upper.add(factory.tuple("unused23").product(factory.tuple("c2_performance$1")));
 x18_upper.add(factory.tuple("unused23").product(factory.tuple("c2_performance$2")));
+x18_upper.add(factory.tuple("unused24").product(factory.tuple("unused25")));
+x18_upper.add(factory.tuple("unused24").product(factory.tuple("c2_performance$1")));
+x18_upper.add(factory.tuple("unused24").product(factory.tuple("c2_performance$2")));
 bounds.bound(x18, x18_upper);
 
 TupleSet x19_upper = factory.noneOf(2);
-x19_upper.add(factory.tuple("c2_performance$0").product(factory.tuple("-2")));
-x19_upper.add(factory.tuple("c2_performance$0").product(factory.tuple("-1")));
-x19_upper.add(factory.tuple("c2_performance$0").product(factory.tuple("0")));
-x19_upper.add(factory.tuple("c2_performance$0").product(factory.tuple("1")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("-8")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("-7")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("-6")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("-5")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("-4")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("-3")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("-2")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("-1")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("0")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("1")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("2")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("3")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("4")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("5")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("6")));
+x19_upper.add(factory.tuple("unused25").product(factory.tuple("7")));
+x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("-8")));
+x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("-7")));
+x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("-6")));
+x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("-5")));
+x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("-4")));
+x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("-3")));
 x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("-2")));
 x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("-1")));
 x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("0")));
 x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("1")));
+x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("2")));
+x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("3")));
+x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("4")));
+x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("5")));
+x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("6")));
+x19_upper.add(factory.tuple("c2_performance$1").product(factory.tuple("7")));
+x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("-8")));
+x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("-7")));
+x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("-6")));
+x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("-5")));
+x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("-4")));
+x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("-3")));
 x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("-2")));
 x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("-1")));
 x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("0")));
 x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("1")));
+x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("2")));
+x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("3")));
+x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("4")));
+x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("5")));
+x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("6")));
+x19_upper.add(factory.tuple("c2_performance$2").product(factory.tuple("7")));
 bounds.bound(x19, x19_upper);
 
 TupleSet x20_upper = factory.noneOf(2);
@@ -482,52 +537,100 @@ bounds.bound(x24, x24_upper);
 TupleSet x25_upper = factory.noneOf(2);
 x25_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused14")));
 x25_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused15")));
-x25_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("c35_AccessLog$2")));
+x25_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused16")));
 bounds.bound(x25, x25_upper);
 
 TupleSet x26_upper = factory.noneOf(2);
-x26_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused16")));
 x26_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused17")));
 x26_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused18")));
+x26_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused19")));
 bounds.bound(x26, x26_upper);
 
 TupleSet x27_upper = factory.noneOf(2);
-x27_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused19")));
 x27_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused20")));
+x27_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused21")));
 x27_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("c49_InMemory$2")));
 bounds.bound(x27, x27_upper);
 
 TupleSet x28_upper = factory.noneOf(2);
-x28_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused21")));
 x28_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused22")));
 x28_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused23")));
+x28_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused24")));
 bounds.bound(x28, x28_upper);
 
 TupleSet x29_upper = factory.noneOf(2);
-x29_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused24")));
-x29_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused25")));
+x29_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused26")));
+x29_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused27")));
 x29_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("c63_total_performance$2")));
 bounds.bound(x29, x29_upper);
 
 TupleSet x30_upper = factory.noneOf(2);
-x30_upper.add(factory.tuple("unused24").product(factory.tuple("-2")));
-x30_upper.add(factory.tuple("unused24").product(factory.tuple("-1")));
-x30_upper.add(factory.tuple("unused24").product(factory.tuple("0")));
-x30_upper.add(factory.tuple("unused24").product(factory.tuple("1")));
-x30_upper.add(factory.tuple("unused25").product(factory.tuple("-2")));
-x30_upper.add(factory.tuple("unused25").product(factory.tuple("-1")));
-x30_upper.add(factory.tuple("unused25").product(factory.tuple("0")));
-x30_upper.add(factory.tuple("unused25").product(factory.tuple("1")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("-8")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("-7")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("-6")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("-5")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("-4")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("-3")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("-2")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("-1")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("0")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("1")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("2")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("3")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("4")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("5")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("6")));
+x30_upper.add(factory.tuple("unused26").product(factory.tuple("7")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("-8")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("-7")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("-6")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("-5")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("-4")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("-3")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("-2")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("-1")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("0")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("1")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("2")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("3")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("4")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("5")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("6")));
+x30_upper.add(factory.tuple("unused27").product(factory.tuple("7")));
+x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("-8")));
+x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("-7")));
+x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("-6")));
+x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("-5")));
+x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("-4")));
+x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("-3")));
 x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("-2")));
 x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("-1")));
 x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("0")));
 x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("1")));
+x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("2")));
+x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("3")));
+x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("4")));
+x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("5")));
+x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("6")));
+x30_upper.add(factory.tuple("c63_total_performance$2").product(factory.tuple("7")));
 bounds.bound(x30, x30_upper);
 
+bounds.boundExactly(-8,factory.range(factory.tuple("-8"),factory.tuple("-8")));
+bounds.boundExactly(-7,factory.range(factory.tuple("-7"),factory.tuple("-7")));
+bounds.boundExactly(-6,factory.range(factory.tuple("-6"),factory.tuple("-6")));
+bounds.boundExactly(-5,factory.range(factory.tuple("-5"),factory.tuple("-5")));
+bounds.boundExactly(-4,factory.range(factory.tuple("-4"),factory.tuple("-4")));
+bounds.boundExactly(-3,factory.range(factory.tuple("-3"),factory.tuple("-3")));
 bounds.boundExactly(-2,factory.range(factory.tuple("-2"),factory.tuple("-2")));
 bounds.boundExactly(-1,factory.range(factory.tuple("-1"),factory.tuple("-1")));
 bounds.boundExactly(0,factory.range(factory.tuple("0"),factory.tuple("0")));
 bounds.boundExactly(1,factory.range(factory.tuple("1"),factory.tuple("1")));
+bounds.boundExactly(2,factory.range(factory.tuple("2"),factory.tuple("2")));
+bounds.boundExactly(3,factory.range(factory.tuple("3"),factory.tuple("3")));
+bounds.boundExactly(4,factory.range(factory.tuple("4"),factory.tuple("4")));
+bounds.boundExactly(5,factory.range(factory.tuple("5"),factory.tuple("5")));
+bounds.boundExactly(6,factory.range(factory.tuple("6"),factory.tuple("6")));
+bounds.boundExactly(7,factory.range(factory.tuple("7"),factory.tuple("7")));
 
 Expression x33=x6.intersection(x7);
 Formula x32=x33.no();
@@ -682,215 +785,230 @@ Formula x183=x184.one();
 Formula x180=x183.forAll(x181);
 Expression x188=x16.join(x20);
 Formula x187=x188.some();
-Expression x192=x16.join(x21);
-Formula x191=x192.no();
-Expression x195=x16.join(x23);
-Formula x194=x195.no();
-Expression x197=x16.join(x28);
-Formula x196=x197.no();
-Formula x193=x194.and(x196);
-Formula x190=x191.and(x193);
-Expression x199=x16.join(x24);
-Formula x198=x199.no();
-Formula x189=x190.and(x198);
+Expression x191=x16.join(x21);
+Formula x190=x191.no();
+Expression x193=x16.join(x27);
+Formula x192=x193.some();
+Formula x189=x190.and(x192);
 Formula x186=x187.and(x189);
-Expression x203=x16.join(x22);
-Formula x202=x203.no();
-Expression x205=x16.join(x26);
-Formula x204=x205.no();
-Formula x201=x202.and(x204);
-Expression x207=x16.join(x27);
-Formula x206=x207.some();
-Formula x200=x201.and(x206);
-Formula x185=x186.and(x200);
-Variable x210=Variable.unary("show_this");
-Decls x209=x210.oneOf(x16);
-Expression x213=x210.join(x20);
-Formula x212=x213.one();
-Formula x214=x213.in(x6);
-Formula x211=x212.and(x214);
-Formula x208=x211.forAll(x209);
-Expression x216=x20.join(Expression.UNIV);
-Formula x215=x216.in(x16);
-Variable x219=Variable.unary("show_this");
-Decls x218=x219.oneOf(x16);
-Expression x222=x219.join(x21);
-Formula x221=x222.lone();
-Formula x223=x222.in(x7);
-Formula x220=x221.and(x223);
-Formula x217=x220.forAll(x218);
-Expression x225=x21.join(Expression.UNIV);
-Formula x224=x225.in(x16);
-Variable x228=Variable.unary("show_this");
-Decls x227=x228.oneOf(x16);
-Expression x231=x228.join(x22);
-Formula x230=x231.lone();
-Formula x232=x231.in(x8);
-Formula x229=x230.and(x232);
-Formula x226=x229.forAll(x227);
-Expression x234=x22.join(Expression.UNIV);
-Formula x233=x234.in(x16);
-Variable x237=Variable.unary("show_this");
-Decls x236=x237.oneOf(x16);
-Expression x240=x237.join(x23);
-Formula x239=x240.lone();
-Formula x241=x240.in(x9);
-Formula x238=x239.and(x241);
-Formula x235=x238.forAll(x236);
-Expression x243=x23.join(Expression.UNIV);
-Formula x242=x243.in(x16);
-Variable x246=Variable.unary("show_this");
-Decls x245=x246.oneOf(x16);
-Expression x249=x246.join(x24);
-Formula x248=x249.lone();
-Formula x250=x249.in(x10);
-Formula x247=x248.and(x250);
-Formula x244=x247.forAll(x245);
-Expression x252=x24.join(Expression.UNIV);
-Formula x251=x252.in(x16);
-Variable x255=Variable.unary("show_this");
-Decls x254=x255.oneOf(x16);
-Expression x258=x255.join(x25);
-Formula x257=x258.lone();
-Formula x259=x258.in(x11);
-Formula x256=x257.and(x259);
-Formula x253=x256.forAll(x254);
-Expression x261=x25.join(Expression.UNIV);
-Formula x260=x261.in(x16);
-Variable x264=Variable.unary("show_this");
-Decls x263=x264.oneOf(x16);
-Expression x267=x264.join(x26);
-Formula x266=x267.lone();
-Formula x268=x267.in(x12);
-Formula x265=x266.and(x268);
-Formula x262=x265.forAll(x263);
-Expression x270=x26.join(Expression.UNIV);
-Formula x269=x270.in(x16);
-Variable x273=Variable.unary("show_this");
-Decls x272=x273.oneOf(x16);
-Expression x276=x273.join(x27);
-Formula x275=x276.lone();
-Formula x277=x276.in(x13);
-Formula x274=x275.and(x277);
-Formula x271=x274.forAll(x272);
-Expression x279=x27.join(Expression.UNIV);
-Formula x278=x279.in(x16);
-Variable x282=Variable.unary("show_this");
-Decls x281=x282.oneOf(x16);
-Expression x285=x282.join(x28);
-Formula x284=x285.lone();
-Formula x286=x285.in(x14);
-Formula x283=x284.and(x286);
-Formula x280=x283.forAll(x281);
-Expression x288=x28.join(Expression.UNIV);
-Formula x287=x288.in(x16);
-Variable x291=Variable.unary("show_this");
-Decls x290=x291.oneOf(x16);
-Expression x294=x291.join(x29);
-Formula x293=x294.one();
-Formula x295=x294.in(x17);
-Formula x292=x293.and(x295);
-Formula x289=x292.forAll(x290);
-Expression x297=x29.join(Expression.UNIV);
-Formula x296=x297.in(x16);
-Variable x300=Variable.unary("show_this");
-Decls x299=x300.oneOf(x16);
-Expression x303=x300.join(x29);
-Expression x302=x303.join(x30);
-Expression x316=x300.join(x20);
-Expression x315=x316.join(x18);
-Expression x314=x315.join(x19);
-IntExpression x313=x314.sum();
-Expression x320=x300.join(x21);
-Expression x319=x320.join(x18);
-Expression x318=x319.join(x19);
-IntExpression x317=x318.sum();
-IntExpression x312=x313.plus(x317);
-Expression x324=x300.join(x22);
-Expression x323=x324.join(x18);
-Expression x322=x323.join(x19);
-IntExpression x321=x322.sum();
-IntExpression x311=x312.plus(x321);
-Expression x328=x300.join(x23);
-Expression x327=x328.join(x18);
-Expression x326=x327.join(x19);
-IntExpression x325=x326.sum();
-IntExpression x310=x311.plus(x325);
-Expression x332=x300.join(x24);
-Expression x331=x332.join(x18);
-Expression x330=x331.join(x19);
-IntExpression x329=x330.sum();
-IntExpression x309=x310.plus(x329);
-Expression x336=x300.join(x25);
-Expression x335=x336.join(x18);
-Expression x334=x335.join(x19);
-IntExpression x333=x334.sum();
-IntExpression x308=x309.plus(x333);
-Expression x340=x300.join(x26);
-Expression x339=x340.join(x18);
-Expression x338=x339.join(x19);
-IntExpression x337=x338.sum();
-IntExpression x307=x308.plus(x337);
-Expression x344=x300.join(x27);
-Expression x343=x344.join(x18);
-Expression x342=x343.join(x19);
-IntExpression x341=x342.sum();
-IntExpression x306=x307.plus(x341);
-Expression x348=x300.join(x28);
-Expression x347=x348.join(x18);
-Expression x346=x347.join(x19);
-IntExpression x345=x346.sum();
-IntExpression x305=x306.plus(x345);
-Expression x304=x305.toExpression();
-Formula x301=x302.eq(x304);
-Formula x298=x301.forAll(x299);
-Variable x351=Variable.unary("show_this");
-Decls x350=x351.oneOf(x17);
-Expression x354=x351.join(x30);
-Formula x353=x354.one();
-Formula x355=x354.in(Expression.INTS);
-Formula x352=x353.and(x355);
-Formula x349=x352.forAll(x350);
-Expression x357=x30.join(Expression.UNIV);
-Formula x356=x357.in(x17);
-Variable x360=Variable.unary("show_this");
-Decls x359=x360.oneOf(x17);
-Expression x362=x29.join(x360);
-Formula x361=x362.one();
-Formula x358=x361.forAll(x359);
-Formula x363=x0.eq(x0);
-Formula x364=x1.eq(x1);
-Formula x365=x2.eq(x2);
-Formula x366=x3.eq(x3);
-Formula x367=x4.eq(x4);
-Formula x368=x5.eq(x5);
-Formula x369=x6.eq(x6);
-Formula x370=x7.eq(x7);
-Formula x371=x8.eq(x8);
-Formula x372=x9.eq(x9);
-Formula x373=x10.eq(x10);
-Formula x374=x11.eq(x11);
-Formula x375=x12.eq(x12);
-Formula x376=x13.eq(x13);
-Formula x377=x14.eq(x14);
-Formula x378=x15.eq(x15);
-Formula x379=x16.eq(x16);
-Formula x380=x17.eq(x17);
-Formula x381=x18.eq(x18);
-Formula x382=x19.eq(x19);
-Formula x383=x20.eq(x20);
-Formula x384=x21.eq(x21);
-Formula x385=x22.eq(x22);
-Formula x386=x23.eq(x23);
-Formula x387=x24.eq(x24);
-Formula x388=x25.eq(x25);
-Formula x389=x26.eq(x26);
-Formula x390=x27.eq(x27);
-Formula x391=x28.eq(x28);
-Formula x392=x29.eq(x29);
-Formula x393=x30.eq(x30);
+Expression x195=x16.join(x22);
+Formula x194=x195.no();
+Formula x185=x186.and(x194);
+Variable x198=Variable.unary("show_this");
+Decls x197=x198.oneOf(x16);
+Expression x201=x198.join(x20);
+Formula x200=x201.one();
+Formula x202=x201.in(x6);
+Formula x199=x200.and(x202);
+Formula x196=x199.forAll(x197);
+Expression x204=x20.join(Expression.UNIV);
+Formula x203=x204.in(x16);
+Variable x207=Variable.unary("show_this");
+Decls x206=x207.oneOf(x16);
+Expression x210=x207.join(x21);
+Formula x209=x210.lone();
+Formula x211=x210.in(x7);
+Formula x208=x209.and(x211);
+Formula x205=x208.forAll(x206);
+Expression x213=x21.join(Expression.UNIV);
+Formula x212=x213.in(x16);
+Variable x216=Variable.unary("show_this");
+Decls x215=x216.oneOf(x16);
+Expression x219=x216.join(x22);
+Formula x218=x219.lone();
+Formula x220=x219.in(x8);
+Formula x217=x218.and(x220);
+Formula x214=x217.forAll(x215);
+Expression x222=x22.join(Expression.UNIV);
+Formula x221=x222.in(x16);
+Variable x225=Variable.unary("show_this");
+Decls x224=x225.oneOf(x16);
+Expression x228=x225.join(x23);
+Formula x227=x228.lone();
+Formula x229=x228.in(x9);
+Formula x226=x227.and(x229);
+Formula x223=x226.forAll(x224);
+Expression x231=x23.join(Expression.UNIV);
+Formula x230=x231.in(x16);
+Variable x234=Variable.unary("show_this");
+Decls x233=x234.oneOf(x16);
+Expression x237=x234.join(x24);
+Formula x236=x237.lone();
+Formula x238=x237.in(x10);
+Formula x235=x236.and(x238);
+Formula x232=x235.forAll(x233);
+Expression x240=x24.join(Expression.UNIV);
+Formula x239=x240.in(x16);
+Variable x243=Variable.unary("show_this");
+Decls x242=x243.oneOf(x16);
+Expression x246=x243.join(x25);
+Formula x245=x246.lone();
+Formula x247=x246.in(x11);
+Formula x244=x245.and(x247);
+Formula x241=x244.forAll(x242);
+Expression x249=x25.join(Expression.UNIV);
+Formula x248=x249.in(x16);
+Variable x252=Variable.unary("show_this");
+Decls x251=x252.oneOf(x16);
+Expression x255=x252.join(x26);
+Formula x254=x255.lone();
+Formula x256=x255.in(x12);
+Formula x253=x254.and(x256);
+Formula x250=x253.forAll(x251);
+Expression x258=x26.join(Expression.UNIV);
+Formula x257=x258.in(x16);
+Variable x261=Variable.unary("show_this");
+Decls x260=x261.oneOf(x16);
+Expression x264=x261.join(x27);
+Formula x263=x264.lone();
+Formula x265=x264.in(x13);
+Formula x262=x263.and(x265);
+Formula x259=x262.forAll(x260);
+Expression x267=x27.join(Expression.UNIV);
+Formula x266=x267.in(x16);
+Variable x270=Variable.unary("show_this");
+Decls x269=x270.oneOf(x16);
+Expression x273=x270.join(x28);
+Formula x272=x273.lone();
+Formula x274=x273.in(x14);
+Formula x271=x272.and(x274);
+Formula x268=x271.forAll(x269);
+Expression x276=x28.join(Expression.UNIV);
+Formula x275=x276.in(x16);
+Variable x279=Variable.unary("show_this");
+Decls x278=x279.oneOf(x16);
+Expression x282=x279.join(x29);
+Formula x281=x282.one();
+Formula x283=x282.in(x17);
+Formula x280=x281.and(x283);
+Formula x277=x280.forAll(x278);
+Expression x285=x29.join(Expression.UNIV);
+Formula x284=x285.in(x16);
+Variable x288=Variable.unary("show_this");
+Decls x287=x288.oneOf(x17);
+Expression x291=x288.join(x30);
+Formula x290=x291.one();
+Formula x292=x291.in(Expression.INTS);
+Formula x289=x290.and(x292);
+Formula x286=x289.forAll(x287);
+Expression x294=x30.join(Expression.UNIV);
+Formula x293=x294.in(x17);
+Variable x297=Variable.unary("show_this");
+Decls x296=x297.oneOf(x17);
+Expression x300=x29.join(x297);
+Formula x299=x300.one();
+Expression x302=x297.join(x30);
+Expression x317=x29.transpose();
+Expression x316=x297.join(x317);
+Expression x315=x316.join(x20);
+Expression x314=x315.join(x18);
+Expression x313=x314.join(x19);
+IntExpression x312=x313.sum();
+Expression x323=x29.transpose();
+Expression x322=x297.join(x323);
+Expression x321=x322.join(x21);
+Expression x320=x321.join(x18);
+Expression x319=x320.join(x19);
+IntExpression x318=x319.sum();
+IntExpression x311=x312.plus(x318);
+Expression x329=x29.transpose();
+Expression x328=x297.join(x329);
+Expression x327=x328.join(x22);
+Expression x326=x327.join(x18);
+Expression x325=x326.join(x19);
+IntExpression x324=x325.sum();
+IntExpression x310=x311.plus(x324);
+Expression x335=x29.transpose();
+Expression x334=x297.join(x335);
+Expression x333=x334.join(x23);
+Expression x332=x333.join(x18);
+Expression x331=x332.join(x19);
+IntExpression x330=x331.sum();
+IntExpression x309=x310.plus(x330);
+Expression x341=x29.transpose();
+Expression x340=x297.join(x341);
+Expression x339=x340.join(x24);
+Expression x338=x339.join(x18);
+Expression x337=x338.join(x19);
+IntExpression x336=x337.sum();
+IntExpression x308=x309.plus(x336);
+Expression x347=x29.transpose();
+Expression x346=x297.join(x347);
+Expression x345=x346.join(x25);
+Expression x344=x345.join(x18);
+Expression x343=x344.join(x19);
+IntExpression x342=x343.sum();
+IntExpression x307=x308.plus(x342);
+Expression x353=x29.transpose();
+Expression x352=x297.join(x353);
+Expression x351=x352.join(x26);
+Expression x350=x351.join(x18);
+Expression x349=x350.join(x19);
+IntExpression x348=x349.sum();
+IntExpression x306=x307.plus(x348);
+Expression x359=x29.transpose();
+Expression x358=x297.join(x359);
+Expression x357=x358.join(x27);
+Expression x356=x357.join(x18);
+Expression x355=x356.join(x19);
+IntExpression x354=x355.sum();
+IntExpression x305=x306.plus(x354);
+Expression x365=x29.transpose();
+Expression x364=x297.join(x365);
+Expression x363=x364.join(x28);
+Expression x362=x363.join(x18);
+Expression x361=x362.join(x19);
+IntExpression x360=x361.sum();
+IntExpression x304=x305.plus(x360);
+Expression x303=x304.toExpression();
+Formula x301=x302.eq(x303);
+Formula x298=x299.and(x301);
+Formula x295=x298.forAll(x296);
+Formula x366=x0.eq(x0);
+Formula x367=x1.eq(x1);
+Formula x368=x2.eq(x2);
+Formula x369=x3.eq(x3);
+Formula x370=x4.eq(x4);
+Formula x371=x5.eq(x5);
+Formula x372=x6.eq(x6);
+Formula x373=x7.eq(x7);
+Formula x374=x8.eq(x8);
+Formula x375=x9.eq(x9);
+Formula x376=x10.eq(x10);
+Formula x377=x11.eq(x11);
+Formula x378=x12.eq(x12);
+Formula x379=x13.eq(x13);
+Formula x380=x14.eq(x14);
+Formula x381=x15.eq(x15);
+Formula x382=x16.eq(x16);
+Formula x383=x17.eq(x17);
+Formula x384=x18.eq(x18);
+Formula x385=x19.eq(x19);
+Formula x386=x20.eq(x20);
+Formula x387=x21.eq(x21);
+Formula x388=x22.eq(x22);
+Formula x389=x23.eq(x23);
+Formula x390=x24.eq(x24);
+Formula x391=x25.eq(x25);
+Formula x392=x26.eq(x26);
+Formula x393=x27.eq(x27);
+Formula x394=x28.eq(x28);
+Formula x395=x29.eq(x29);
+Formula x396=x30.eq(x30);
+Formula old=Formula.compose(FormulaOperator.AND, x32,x34,x37,x40,x43,x46,x49,x52,x55,x66,x77,x88,x99,x110,x121,x132,x148,x159,x167,x170,x178,x180,x185,x196,x203,x205,x212,x214,x221,x223,x230,x232,x239,x241,x248,x250,x257,x259,x266,x268,x275,x277,x284,x286,x293,x295,x366,x367,x368,x369,x370,x371,x372,x373,x374,x375,x376,x377,x378,x379,x380,x381,x382,x383,x384,x385,x386,x387,x388,x389,x390,x391,x392,x393,x394,x395,x396); 
 IntExprReduction ier = new IntExprReduction();
-Formula[] formulas = ier.reduceIntExpressions(x32,x34,x37,x40,x43,x46,x49,x52,x55,x66,x77,x88,x99,x110,x121,x132,x148,x159,x167,x170,x178,x180,x185,x208,x215,x217,x224,x226,x233,x235,x242,x244,x251,x253,x260,x262,x269,x271,x278,x280,x287,x289,x296,x298,x349,x356,x358,x363,x364,x365,x366,x367,x368,x369,x370,x371,x372,x373,x374,x375,x376,x377,x378,x379,x380,x381,x382,x383,x384,x385,x386,x387,x388,x389,x390,x391,x392,x393);
+Formula[] formulas = ier.reduceIntExpressions(x32,x34,x37,x40,x43,x46,x49,x52,x55,x66,x77,x88,x99,x110,x121,x132,x148,x159,x167,x170,x178,x180,x185,x196,x203,x205,x212,x214,x221,x223,x230,x232,x239,x241,x248,x250,x257,x259,x266,x268,x275,x277,x284,x286,x293,x295,x366,x367,x368,x369,x370,x371,x372,x373,x374,x375,x376,x377,x378,x379,x380,x381,x382,x383,x384,x385,x386,x387,x388,x389,x390,x391,x392,x393,x394,x395,x396);
 Formula newFormula=Formula.compose(FormulaOperator.AND, formulas);
 ier.solve(newFormula, bounds, factory, universe, 32);
+Solver solver = new Solver();
+solver.options().setSolver(SATFactory.DefaultSAT4J);
+solver.options().setBitwidth(32);
+solver.options().setFlatten(false);
+solver.options().setIntEncoding(Options.IntEncoding.TWOSCOMPLEMENT);
+solver.options().setSymmetryBreaking(20);
+solver.options().setSkolemDepth(0);
+System.out.println("Solving...");
+System.out.flush();
+Solution sol = solver.solve(old,bounds);
+System.out.println(sol.toString());
 }}

@@ -322,8 +322,12 @@ public class BuildTree {
 		
 		public static Node buildTree(ComparisonFormula n) {
 			Node newNode;
-			if(n.reduction == Reduction.DELETE){
+			if(n.reduction == Reduction.DELETE){ //|| n.reduction == Reduction.INTCONSTANT){
 				return Formula.constant(true);
+			}
+			else if(n.reduction == Reduction.INTCONSTANT)
+			{
+				return n;
 			}
 			else if(n.reduction == Reduction.EQUALEXPRESSIONS){
 				ComparisonFormula tempForm = (ComparisonFormula)n;
@@ -342,7 +346,7 @@ public class BuildTree {
 
 		
 		public static MultiplicityFormula buildTree(MultiplicityFormula multFormula) {
-			return null;
+			return multFormula;
 		}
 
 		public RelationPredicate buildTree(RelationPredicate predicate) {

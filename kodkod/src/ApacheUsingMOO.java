@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import kodkod.arithmetic.IntExprReduction;
@@ -87,10 +86,11 @@ import kodkod.engine.config.Options;
     some (this/c101_simpleConfig . this/c3_Apache.r_c4_Base) && 
     no (this/c101_simpleConfig . this/c3_Apache.r_c10_HostnameLookups) && 
     no (this/c101_simpleConfig . this/c3_Apache.r_c23_EnableSendfile) && 
-    some (this/c101_simpleConfig . this/c3_Apache.r_c29_FollowSymLinks) && 
-    some (this/c101_simpleConfig . this/c3_Apache.r_c17_KeepAlive) && 
-    some (this/c101_simpleConfig . this/c3_Apache.r_c42_ExtendedStatus) && 
-    no (this/c101_simpleConfig . this/c3_Apache.r_c49_InMemory) && 
+    no (this/c101_simpleConfig . this/c3_Apache.r_c57_Handle) && 
+    no (this/c101_simpleConfig . this/c3_Apache.r_c29_FollowSymLinks) && 
+    no (this/c101_simpleConfig . this/c3_Apache.r_c17_KeepAlive) && 
+    no (this/c101_simpleConfig . this/c3_Apache.r_c42_ExtendedStatus) && 
+    some (this/c101_simpleConfig . this/c3_Apache.r_c49_InMemory) && 
     (all show_this: this/c101_simpleConfig | 
       one (show_this . this/c3_Apache.r_c4_Base) && 
       (show_this . this/c3_Apache.r_c4_Base) in this/c4_Base) && 
@@ -211,7 +211,7 @@ import kodkod.engine.config.Options;
     this/bag_extra_ints.extra_ints = this/bag_extra_ints.extra_ints
   ==================================================
 */
-public final class ApacheMoo {
+public final class ApacheUsingMOO {
 
 public static void main(String[] args) throws Exception {
 
@@ -266,30 +266,12 @@ List<String> atomlist = Arrays.asList(
  "41", "45", "5", "53", "57", "6",
  "64", "68", "7", "72", "79", "8",
  "83", "87", "90", "94", "98", "c101_simpleConfig$0",
- "c63_total_performance$0", "concrete_int_bag%", "partial_c17_KeepAlive%", "partial_c29_FollowSymLinks%", "partial_c42_ExtendedStatus%", "partial_c4_Base%",
- "partial_c57_Handle%", "performance_for_c17_KeepAlive_of_105%", "performance_for_c29_FollowSymLinks_of_0%", "performance_for_c42_ExtendedStatus_of_minus11%", "performance_for_c4_Base_of_150%", "performance_for_c57_Handle_of_4%",
- "unused0", "unused1", "unused2", "unused3", "unused4", "unused5",
- "unused6", "unused7"
+ "c63_total_performance$0", "concrete_int_bag%", "partial_c49_InMemory%", "partial_c4_Base%", "performance_for_c49_InMemory_of_26%", "performance_for_c4_Base_of_150%",
+ "unused0", "unused1", "unused10", "unused11", "unused12", "unused13",
+ "unused2", "unused3", "unused4", "unused5", "unused6", "unused7",
+ "unused8", "unused9"
 );
-String[] test = new String[]{
-"-1", "-11", "-15", "-18", "-2",
-"-22", "-26", "-3", "-33", "-37", "-4",
-"-41", "-48", "-5", "-52", "-6", "-7",
-"-8", "0", "1", "102", "105", "109",
-"11", "113", "116", "117", "120", "124",
-"128", "131", "132", "135", "139", "143",
-"146", "15", "150", "154", "158", "161",
-"165", "169", "176", "180", "184", "19",
-"191", "195", "2", "203", "207", "214",
-"218", "222", "229", "233", "237", "240",
-"244", "248", "255", "259", "26", "263",
-"266", "270", "274", "281", "285", "289",
-"296", "3", "30", "300", "34", "4",
-"41", "45", "5", "53", "57", "6",
-"64", "68", "7", "72", "79", "8",
-"83", "87", "90", "94", "98"
-};
-System.out.println(test.length);
+
 Universe universe = new Universe(atomlist);
 TupleFactory factory = universe.factory();
 Bounds bounds = new Bounds(universe);
@@ -418,43 +400,43 @@ x7_upper.add(factory.tuple("unused0"));
 bounds.bound(x7, x7_upper);
 
 TupleSet x8_upper = factory.noneOf(1);
-x8_upper.add(factory.tuple("partial_c17_KeepAlive%"));
+x8_upper.add(factory.tuple("unused1"));
 bounds.bound(x8, x8_upper);
 
 TupleSet x9_upper = factory.noneOf(1);
-x9_upper.add(factory.tuple("unused1"));
+x9_upper.add(factory.tuple("unused2"));
 bounds.bound(x9, x9_upper);
 
 TupleSet x10_upper = factory.noneOf(1);
-x10_upper.add(factory.tuple("partial_c29_FollowSymLinks%"));
+x10_upper.add(factory.tuple("unused3"));
 bounds.bound(x10, x10_upper);
 
 TupleSet x11_upper = factory.noneOf(1);
-x11_upper.add(factory.tuple("unused2"));
+x11_upper.add(factory.tuple("unused4"));
 bounds.bound(x11, x11_upper);
 
 TupleSet x12_upper = factory.noneOf(1);
-x12_upper.add(factory.tuple("partial_c42_ExtendedStatus%"));
+x12_upper.add(factory.tuple("unused5"));
 bounds.bound(x12, x12_upper);
 
 TupleSet x13_upper = factory.noneOf(1);
-x13_upper.add(factory.tuple("unused3"));
+x13_upper.add(factory.tuple("partial_c49_InMemory%"));
 bounds.bound(x13, x13_upper);
 
 TupleSet x14_upper = factory.noneOf(1);
-x14_upper.add(factory.tuple("partial_c57_Handle%"));
+x14_upper.add(factory.tuple("unused6"));
 bounds.bound(x14, x14_upper);
 
 TupleSet x15_upper = factory.noneOf(1);
 x15_upper.add(factory.tuple("performance_for_c4_Base_of_150%"));
-x15_upper.add(factory.tuple("unused4"));
-x15_upper.add(factory.tuple("performance_for_c17_KeepAlive_of_105%"));
-x15_upper.add(factory.tuple("unused5"));
-x15_upper.add(factory.tuple("performance_for_c29_FollowSymLinks_of_0%"));
-x15_upper.add(factory.tuple("unused6"));
-x15_upper.add(factory.tuple("performance_for_c42_ExtendedStatus_of_minus11%"));
 x15_upper.add(factory.tuple("unused7"));
-x15_upper.add(factory.tuple("performance_for_c57_Handle_of_4%"));
+x15_upper.add(factory.tuple("unused8"));
+x15_upper.add(factory.tuple("unused9"));
+x15_upper.add(factory.tuple("unused10"));
+x15_upper.add(factory.tuple("unused11"));
+x15_upper.add(factory.tuple("unused12"));
+x15_upper.add(factory.tuple("performance_for_c49_InMemory_of_26%"));
+x15_upper.add(factory.tuple("unused13"));
 bounds.bound(x15, x15_upper);
 
 TupleSet x16_upper = factory.noneOf(1);
@@ -471,26 +453,26 @@ bounds.boundExactly(x18, x18_upper);
 
 TupleSet x19_upper = factory.noneOf(2);
 x19_upper.add(factory.tuple("partial_c4_Base%").product(factory.tuple("performance_for_c4_Base_of_150%")));
-x19_upper.add(factory.tuple("unused0").product(factory.tuple("unused4")));
-x19_upper.add(factory.tuple("partial_c17_KeepAlive%").product(factory.tuple("performance_for_c17_KeepAlive_of_105%")));
-x19_upper.add(factory.tuple("unused1").product(factory.tuple("unused5")));
-x19_upper.add(factory.tuple("partial_c29_FollowSymLinks%").product(factory.tuple("performance_for_c29_FollowSymLinks_of_0%")));
-x19_upper.add(factory.tuple("unused2").product(factory.tuple("unused6")));
-x19_upper.add(factory.tuple("partial_c42_ExtendedStatus%").product(factory.tuple("performance_for_c42_ExtendedStatus_of_minus11%")));
-x19_upper.add(factory.tuple("unused3").product(factory.tuple("unused7")));
-x19_upper.add(factory.tuple("partial_c57_Handle%").product(factory.tuple("performance_for_c57_Handle_of_4%")));
+x19_upper.add(factory.tuple("unused0").product(factory.tuple("unused7")));
+x19_upper.add(factory.tuple("unused1").product(factory.tuple("unused8")));
+x19_upper.add(factory.tuple("unused2").product(factory.tuple("unused9")));
+x19_upper.add(factory.tuple("unused3").product(factory.tuple("unused10")));
+x19_upper.add(factory.tuple("unused4").product(factory.tuple("unused11")));
+x19_upper.add(factory.tuple("unused5").product(factory.tuple("unused12")));
+x19_upper.add(factory.tuple("partial_c49_InMemory%").product(factory.tuple("performance_for_c49_InMemory_of_26%")));
+x19_upper.add(factory.tuple("unused6").product(factory.tuple("unused13")));
 bounds.bound(x19, x19_upper);
 
 TupleSet x20_upper = factory.noneOf(2);
 x20_upper.add(factory.tuple("performance_for_c4_Base_of_150%").product(factory.tuple("150")));
-x20_upper.add(factory.tuple("unused4").product(factory.tuple("-26")));
-x20_upper.add(factory.tuple("performance_for_c17_KeepAlive_of_105%").product(factory.tuple("105")));
-x20_upper.add(factory.tuple("unused5").product(factory.tuple("15")));
-x20_upper.add(factory.tuple("performance_for_c29_FollowSymLinks_of_0%").product(factory.tuple("0")));
-x20_upper.add(factory.tuple("unused6").product(factory.tuple("-15")));
-x20_upper.add(factory.tuple("performance_for_c42_ExtendedStatus_of_minus11%").product(factory.tuple("-11")));
-x20_upper.add(factory.tuple("unused7").product(factory.tuple("26")));
-x20_upper.add(factory.tuple("performance_for_c57_Handle_of_4%").product(factory.tuple("4")));
+x20_upper.add(factory.tuple("unused7").product(factory.tuple("-26")));
+x20_upper.add(factory.tuple("unused8").product(factory.tuple("105")));
+x20_upper.add(factory.tuple("unused9").product(factory.tuple("15")));
+x20_upper.add(factory.tuple("unused10").product(factory.tuple("0")));
+x20_upper.add(factory.tuple("unused11").product(factory.tuple("-15")));
+x20_upper.add(factory.tuple("unused12").product(factory.tuple("-11")));
+x20_upper.add(factory.tuple("performance_for_c49_InMemory_of_26%").product(factory.tuple("26")));
+x20_upper.add(factory.tuple("unused13").product(factory.tuple("4")));
 bounds.bound(x20, x20_upper);
 
 TupleSet x21_upper = factory.noneOf(2);
@@ -502,31 +484,31 @@ x22_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused
 bounds.bound(x22, x22_upper);
 
 TupleSet x23_upper = factory.noneOf(2);
-x23_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("partial_c17_KeepAlive%")));
+x23_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused1")));
 bounds.bound(x23, x23_upper);
 
 TupleSet x24_upper = factory.noneOf(2);
-x24_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused1")));
+x24_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused2")));
 bounds.bound(x24, x24_upper);
 
 TupleSet x25_upper = factory.noneOf(2);
-x25_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("partial_c29_FollowSymLinks%")));
+x25_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused3")));
 bounds.bound(x25, x25_upper);
 
 TupleSet x26_upper = factory.noneOf(2);
-x26_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused2")));
+x26_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused4")));
 bounds.bound(x26, x26_upper);
 
 TupleSet x27_upper = factory.noneOf(2);
-x27_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("partial_c42_ExtendedStatus%")));
+x27_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused5")));
 bounds.bound(x27, x27_upper);
 
 TupleSet x28_upper = factory.noneOf(2);
-x28_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused3")));
+x28_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("partial_c49_InMemory%")));
 bounds.bound(x28, x28_upper);
 
 TupleSet x29_upper = factory.noneOf(2);
-x29_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("partial_c57_Handle%")));
+x29_upper.add(factory.tuple("c101_simpleConfig$0").product(factory.tuple("unused6")));
 bounds.bound(x29, x29_upper);
 
 TupleSet x30_upper = factory.noneOf(2);
@@ -955,225 +937,229 @@ Expression x190=x16.join(x21);
 Formula x189=x190.some();
 Expression x194=x16.join(x22);
 Formula x193=x194.no();
-Expression x196=x16.join(x24);
-Formula x195=x196.no();
+Expression x197=x16.join(x24);
+Formula x196=x197.no();
+Expression x199=x16.join(x29);
+Formula x198=x199.no();
+Formula x195=x196.and(x198);
 Formula x192=x193.and(x195);
-Expression x198=x16.join(x25);
-Formula x197=x198.some();
-Formula x191=x192.and(x197);
+Expression x201=x16.join(x25);
+Formula x200=x201.no();
+Formula x191=x192.and(x200);
 Formula x188=x189.and(x191);
-Expression x202=x16.join(x23);
-Formula x201=x202.some();
-Expression x204=x16.join(x27);
-Formula x203=x204.some();
-Formula x200=x201.and(x203);
-Expression x206=x16.join(x28);
-Formula x205=x206.no();
-Formula x199=x200.and(x205);
-Formula x187=x188.and(x199);
-Variable x209=Variable.unary("show_this");
-Decls x208=x209.oneOf(x16);
-Expression x212=x209.join(x21);
-Formula x211=x212.one();
-Formula x213=x212.in(x6);
-Formula x210=x211.and(x213);
-Formula x207=x210.forAll(x208);
-Expression x215=x21.join(Expression.UNIV);
-Formula x214=x215.in(x16);
-Variable x218=Variable.unary("show_this");
-Decls x217=x218.oneOf(x16);
-Expression x221=x218.join(x22);
-Formula x220=x221.lone();
-Formula x222=x221.in(x7);
-Formula x219=x220.and(x222);
-Formula x216=x219.forAll(x217);
-Expression x224=x22.join(Expression.UNIV);
-Formula x223=x224.in(x16);
-Variable x227=Variable.unary("show_this");
-Decls x226=x227.oneOf(x16);
-Expression x230=x227.join(x23);
-Formula x229=x230.lone();
-Formula x231=x230.in(x8);
-Formula x228=x229.and(x231);
-Formula x225=x228.forAll(x226);
-Expression x233=x23.join(Expression.UNIV);
-Formula x232=x233.in(x16);
-Variable x236=Variable.unary("show_this");
-Decls x235=x236.oneOf(x16);
-Expression x239=x236.join(x24);
-Formula x238=x239.lone();
-Formula x240=x239.in(x9);
-Formula x237=x238.and(x240);
-Formula x234=x237.forAll(x235);
-Expression x242=x24.join(Expression.UNIV);
-Formula x241=x242.in(x16);
-Variable x245=Variable.unary("show_this");
-Decls x244=x245.oneOf(x16);
-Expression x248=x245.join(x25);
-Formula x247=x248.lone();
-Formula x249=x248.in(x10);
-Formula x246=x247.and(x249);
-Formula x243=x246.forAll(x244);
-Expression x251=x25.join(Expression.UNIV);
-Formula x250=x251.in(x16);
-Variable x254=Variable.unary("show_this");
-Decls x253=x254.oneOf(x16);
-Expression x257=x254.join(x26);
-Formula x256=x257.lone();
-Formula x258=x257.in(x11);
-Formula x255=x256.and(x258);
-Formula x252=x255.forAll(x253);
-Expression x260=x26.join(Expression.UNIV);
-Formula x259=x260.in(x16);
-Variable x263=Variable.unary("show_this");
-Decls x262=x263.oneOf(x16);
-Expression x266=x263.join(x27);
-Formula x265=x266.lone();
-Formula x267=x266.in(x12);
-Formula x264=x265.and(x267);
-Formula x261=x264.forAll(x262);
-Expression x269=x27.join(Expression.UNIV);
-Formula x268=x269.in(x16);
-Variable x272=Variable.unary("show_this");
-Decls x271=x272.oneOf(x16);
-Expression x275=x272.join(x28);
-Formula x274=x275.lone();
-Formula x276=x275.in(x13);
-Formula x273=x274.and(x276);
-Formula x270=x273.forAll(x271);
-Expression x278=x28.join(Expression.UNIV);
-Formula x277=x278.in(x16);
-Variable x281=Variable.unary("show_this");
-Decls x280=x281.oneOf(x16);
-Expression x284=x281.join(x29);
-Formula x283=x284.lone();
-Formula x285=x284.in(x14);
-Formula x282=x283.and(x285);
-Formula x279=x282.forAll(x280);
-Expression x287=x29.join(Expression.UNIV);
-Formula x286=x287.in(x16);
-Variable x290=Variable.unary("show_this");
-Decls x289=x290.oneOf(x16);
-Expression x293=x290.join(x30);
-Formula x292=x293.one();
-Formula x294=x293.in(x17);
-Formula x291=x292.and(x294);
-Formula x288=x291.forAll(x289);
-Expression x296=x30.join(Expression.UNIV);
-Formula x295=x296.in(x16);
-Variable x299=Variable.unary("show_this");
-Decls x298=x299.oneOf(x16);
-Expression x302=x299.join(x30);
-Expression x301=x302.join(x31);
-Expression x315=x299.join(x21);
-Expression x314=x315.join(x19);
-Expression x313=x314.join(x20);
-IntExpression x312=x313.sum();
-Expression x319=x299.join(x22);
-Expression x318=x319.join(x19);
-Expression x317=x318.join(x20);
-IntExpression x316=x317.sum();
-IntExpression x311=x312.plus(x316);
-Expression x323=x299.join(x23);
-Expression x322=x323.join(x19);
-Expression x321=x322.join(x20);
-IntExpression x320=x321.sum();
-IntExpression x310=x311.plus(x320);
-Expression x327=x299.join(x24);
-Expression x326=x327.join(x19);
-Expression x325=x326.join(x20);
-IntExpression x324=x325.sum();
-IntExpression x309=x310.plus(x324);
-Expression x331=x299.join(x25);
-Expression x330=x331.join(x19);
-Expression x329=x330.join(x20);
-IntExpression x328=x329.sum();
-IntExpression x308=x309.plus(x328);
-Expression x335=x299.join(x26);
-Expression x334=x335.join(x19);
-Expression x333=x334.join(x20);
-IntExpression x332=x333.sum();
-IntExpression x307=x308.plus(x332);
-Expression x339=x299.join(x27);
-Expression x338=x339.join(x19);
-Expression x337=x338.join(x20);
-IntExpression x336=x337.sum();
-IntExpression x306=x307.plus(x336);
-Expression x343=x299.join(x28);
-Expression x342=x343.join(x19);
-Expression x341=x342.join(x20);
-IntExpression x340=x341.sum();
-IntExpression x305=x306.plus(x340);
-Expression x347=x299.join(x29);
-Expression x346=x347.join(x19);
-Expression x345=x346.join(x20);
-IntExpression x344=x345.sum();
-IntExpression x304=x305.plus(x344);
-Expression x303=x304.toExpression();
-Formula x300=x301.eq(x303);
-Formula x297=x300.forAll(x298);
-Variable x350=Variable.unary("show_this");
-Decls x349=x350.oneOf(x17);
-Expression x353=x350.join(x31);
-Formula x352=x353.one();
-Formula x354=x353.in(Expression.INTS);
-Formula x351=x352.and(x354);
-Formula x348=x351.forAll(x349);
-Expression x356=x31.join(Expression.UNIV);
-Formula x355=x356.in(x17);
-Variable x359=Variable.unary("show_this");
-Decls x358=x359.oneOf(x17);
-Expression x361=x30.join(x359);
-Formula x360=x361.one();
-Formula x357=x360.forAll(x358);
-Variable x364=Variable.unary("show_this");
-Decls x363=x364.oneOf(x18);
-Expression x366=x364.join(x32);
-Formula x365=x366.in(Expression.INTS);
-Formula x362=x365.forAll(x363);
-Expression x368=x32.join(Expression.UNIV);
-Formula x367=x368.in(x18);
-Formula x369=x0.eq(x0);
-Formula x370=x1.eq(x1);
-Formula x371=x2.eq(x2);
-Formula x372=x3.eq(x3);
-Formula x373=x4.eq(x4);
-Formula x374=x5.eq(x5);
-Formula x375=x6.eq(x6);
-Formula x376=x7.eq(x7);
-Formula x377=x8.eq(x8);
-Formula x378=x9.eq(x9);
-Formula x379=x10.eq(x10);
-Formula x380=x11.eq(x11);
-Formula x381=x12.eq(x12);
-Formula x382=x13.eq(x13);
-Formula x383=x14.eq(x14);
-Formula x384=x15.eq(x15);
-Formula x385=x16.eq(x16);
-Formula x386=x17.eq(x17);
-Formula x387=x18.eq(x18);
-Formula x388=x19.eq(x19);
-Formula x389=x20.eq(x20);
-Formula x390=x21.eq(x21);
-Formula x391=x22.eq(x22);
-Formula x392=x23.eq(x23);
-Formula x393=x24.eq(x24);
-Formula x394=x25.eq(x25);
-Formula x395=x26.eq(x26);
-Formula x396=x27.eq(x27);
-Formula x397=x28.eq(x28);
-Formula x398=x29.eq(x29);
-Formula x399=x30.eq(x30);
-Formula x400=x31.eq(x31);
-Formula x401=x32.eq(x32);
-Formula x33=Formula.compose(FormulaOperator.AND, x34, x36, x39, x42, x45, x48, x51, x54, x57, x68, x79, x90, x101, x112, x123, x134, x150, x161, x169, x172, x180, x182, x187, x207, x214, x216, x223, x225, x232, x234, x241, x243, x250, x252, x259, x261, x268, x270, x277, x279, x286, x288, x295, x297, x348, x355, x357, x362, x367, x369, x370, x371, x372, x373, x374, x375, x376, x377, x378, x379, x380, x381, x382, x383, x384, x385, x386, x387, x388, x389, x390, x391, x392, x393, x394, x395, x396, x397, x398, x399, x400, x401);
+Expression x205=x16.join(x23);
+Formula x204=x205.no();
+Expression x207=x16.join(x27);
+Formula x206=x207.no();
+Formula x203=x204.and(x206);
+Expression x209=x16.join(x28);
+Formula x208=x209.some();
+Formula x202=x203.and(x208);
+Formula x187=x188.and(x202);
+Variable x212=Variable.unary("show_this");
+Decls x211=x212.oneOf(x16);
+Expression x215=x212.join(x21);
+Formula x214=x215.one();
+Formula x216=x215.in(x6);
+Formula x213=x214.and(x216);
+Formula x210=x213.forAll(x211);
+Expression x218=x21.join(Expression.UNIV);
+Formula x217=x218.in(x16);
+Variable x221=Variable.unary("show_this");
+Decls x220=x221.oneOf(x16);
+Expression x224=x221.join(x22);
+Formula x223=x224.lone();
+Formula x225=x224.in(x7);
+Formula x222=x223.and(x225);
+Formula x219=x222.forAll(x220);
+Expression x227=x22.join(Expression.UNIV);
+Formula x226=x227.in(x16);
+Variable x230=Variable.unary("show_this");
+Decls x229=x230.oneOf(x16);
+Expression x233=x230.join(x23);
+Formula x232=x233.lone();
+Formula x234=x233.in(x8);
+Formula x231=x232.and(x234);
+Formula x228=x231.forAll(x229);
+Expression x236=x23.join(Expression.UNIV);
+Formula x235=x236.in(x16);
+Variable x239=Variable.unary("show_this");
+Decls x238=x239.oneOf(x16);
+Expression x242=x239.join(x24);
+Formula x241=x242.lone();
+Formula x243=x242.in(x9);
+Formula x240=x241.and(x243);
+Formula x237=x240.forAll(x238);
+Expression x245=x24.join(Expression.UNIV);
+Formula x244=x245.in(x16);
+Variable x248=Variable.unary("show_this");
+Decls x247=x248.oneOf(x16);
+Expression x251=x248.join(x25);
+Formula x250=x251.lone();
+Formula x252=x251.in(x10);
+Formula x249=x250.and(x252);
+Formula x246=x249.forAll(x247);
+Expression x254=x25.join(Expression.UNIV);
+Formula x253=x254.in(x16);
+Variable x257=Variable.unary("show_this");
+Decls x256=x257.oneOf(x16);
+Expression x260=x257.join(x26);
+Formula x259=x260.lone();
+Formula x261=x260.in(x11);
+Formula x258=x259.and(x261);
+Formula x255=x258.forAll(x256);
+Expression x263=x26.join(Expression.UNIV);
+Formula x262=x263.in(x16);
+Variable x266=Variable.unary("show_this");
+Decls x265=x266.oneOf(x16);
+Expression x269=x266.join(x27);
+Formula x268=x269.lone();
+Formula x270=x269.in(x12);
+Formula x267=x268.and(x270);
+Formula x264=x267.forAll(x265);
+Expression x272=x27.join(Expression.UNIV);
+Formula x271=x272.in(x16);
+Variable x275=Variable.unary("show_this");
+Decls x274=x275.oneOf(x16);
+Expression x278=x275.join(x28);
+Formula x277=x278.lone();
+Formula x279=x278.in(x13);
+Formula x276=x277.and(x279);
+Formula x273=x276.forAll(x274);
+Expression x281=x28.join(Expression.UNIV);
+Formula x280=x281.in(x16);
+Variable x284=Variable.unary("show_this");
+Decls x283=x284.oneOf(x16);
+Expression x287=x284.join(x29);
+Formula x286=x287.lone();
+Formula x288=x287.in(x14);
+Formula x285=x286.and(x288);
+Formula x282=x285.forAll(x283);
+Expression x290=x29.join(Expression.UNIV);
+Formula x289=x290.in(x16);
+Variable x293=Variable.unary("show_this");
+Decls x292=x293.oneOf(x16);
+Expression x296=x293.join(x30);
+Formula x295=x296.one();
+Formula x297=x296.in(x17);
+Formula x294=x295.and(x297);
+Formula x291=x294.forAll(x292);
+Expression x299=x30.join(Expression.UNIV);
+Formula x298=x299.in(x16);
+Variable x302=Variable.unary("show_this");
+Decls x301=x302.oneOf(x16);
+Expression x305=x302.join(x30);
+Expression x304=x305.join(x31);
+Expression x318=x302.join(x21);
+Expression x317=x318.join(x19);
+Expression x316=x317.join(x20);
+IntExpression x315=x316.sum();
+Expression x322=x302.join(x22);
+Expression x321=x322.join(x19);
+Expression x320=x321.join(x20);
+IntExpression x319=x320.sum();
+IntExpression x314=x315.plus(x319);
+Expression x326=x302.join(x23);
+Expression x325=x326.join(x19);
+Expression x324=x325.join(x20);
+IntExpression x323=x324.sum();
+IntExpression x313=x314.plus(x323);
+Expression x330=x302.join(x24);
+Expression x329=x330.join(x19);
+Expression x328=x329.join(x20);
+IntExpression x327=x328.sum();
+IntExpression x312=x313.plus(x327);
+Expression x334=x302.join(x25);
+Expression x333=x334.join(x19);
+Expression x332=x333.join(x20);
+IntExpression x331=x332.sum();
+IntExpression x311=x312.plus(x331);
+Expression x338=x302.join(x26);
+Expression x337=x338.join(x19);
+Expression x336=x337.join(x20);
+IntExpression x335=x336.sum();
+IntExpression x310=x311.plus(x335);
+Expression x342=x302.join(x27);
+Expression x341=x342.join(x19);
+Expression x340=x341.join(x20);
+IntExpression x339=x340.sum();
+IntExpression x309=x310.plus(x339);
+Expression x346=x302.join(x28);
+Expression x345=x346.join(x19);
+Expression x344=x345.join(x20);
+IntExpression x343=x344.sum();
+IntExpression x308=x309.plus(x343);
+Expression x350=x302.join(x29);
+Expression x349=x350.join(x19);
+Expression x348=x349.join(x20);
+IntExpression x347=x348.sum();
+IntExpression x307=x308.plus(x347);
+Expression x306=x307.toExpression();
+Formula x303=x304.eq(x306);
+Formula x300=x303.forAll(x301);
+Variable x353=Variable.unary("show_this");
+Decls x352=x353.oneOf(x17);
+Expression x356=x353.join(x31);
+Formula x355=x356.one();
+Formula x357=x356.in(Expression.INTS);
+Formula x354=x355.and(x357);
+Formula x351=x354.forAll(x352);
+Expression x359=x31.join(Expression.UNIV);
+Formula x358=x359.in(x17);
+Variable x362=Variable.unary("show_this");
+Decls x361=x362.oneOf(x17);
+Expression x364=x30.join(x362);
+Formula x363=x364.one();
+Formula x360=x363.forAll(x361);
+Variable x367=Variable.unary("show_this");
+Decls x366=x367.oneOf(x18);
+Expression x369=x367.join(x32);
+Formula x368=x369.in(Expression.INTS);
+Formula x365=x368.forAll(x366);
+Expression x371=x32.join(Expression.UNIV);
+Formula x370=x371.in(x18);
+Formula x372=x0.eq(x0);
+Formula x373=x1.eq(x1);
+Formula x374=x2.eq(x2);
+Formula x375=x3.eq(x3);
+Formula x376=x4.eq(x4);
+Formula x377=x5.eq(x5);
+Formula x378=x6.eq(x6);
+Formula x379=x7.eq(x7);
+Formula x380=x8.eq(x8);
+Formula x381=x9.eq(x9);
+Formula x382=x10.eq(x10);
+Formula x383=x11.eq(x11);
+Formula x384=x12.eq(x12);
+Formula x385=x13.eq(x13);
+Formula x386=x14.eq(x14);
+Formula x387=x15.eq(x15);
+Formula x388=x16.eq(x16);
+Formula x389=x17.eq(x17);
+Formula x390=x18.eq(x18);
+Formula x391=x19.eq(x19);
+Formula x392=x20.eq(x20);
+Formula x393=x21.eq(x21);
+Formula x394=x22.eq(x22);
+Formula x395=x23.eq(x23);
+Formula x396=x24.eq(x24);
+Formula x397=x25.eq(x25);
+Formula x398=x26.eq(x26);
+Formula x399=x27.eq(x27);
+Formula x400=x28.eq(x28);
+Formula x401=x29.eq(x29);
+Formula x402=x30.eq(x30);
+Formula x403=x31.eq(x31);
+Formula x404=x32.eq(x32);
+Formula x33=Formula.compose(FormulaOperator.AND, x34, x36, x39, x42, x45, x48, x51, x54, x57, x68, x79, x90, x101, x112, x123, x134, x150, x161, x169, x172, x180, x182, x187, x210, x217, x219, x226, x228, x235, x237, x244, x246, x253, x255, x262, x264, x271, x273, x280, x282, x289, x291, x298, x300, x351, x358, x360, x365, x370, x372, x373, x374, x375, x376, x377, x378, x379, x380, x381, x382, x383, x384, x385, x386, x387, x388, x389, x390, x391, x392, x393, x394, x395, x396, x397, x398, x399, x400, x401, x402, x403, x404);
 IntExprReduction ier = new IntExprReduction();
-Formula[] formulas = ier.reduceIntExpressions(x34, x36, x39, x42, x45, x48, x51, x54, x57, x68, x79, x90, x101, x112, x123, x134, x150, x161, x169, x172, x180, x182, x187, x207, x214, x216, x223, x225, x232, x234, x241, x243, x250, x252, x259, x261, x268, x270, x277, x279, x286, x288, x295, x297, x348, x355, x357, x362, x367, x369, x370, x371, x372, x373, x374, x375, x376, x377, x378, x379, x380, x381, x382, x383, x384, x385, x386, x387, x388, x389, x390, x391, x392, x393, x394, x395, x396, x397, x398, x399, x400, x401);//x77, x78
+Formula[] formulas = ier.reduceIntExpressions(x34, x36, x39, x42, x45, x48, x51, x54, x57, x68, x79, x90, x101, x112, x123, x134, x150, x161, x169, x172, x180, x182, x187, x210, x217, x219, x226, x228, x235, x237, x244, x246, x253, x255, x262, x264, x271, x273, x280, x282, x289, x291, x298, x300, x351, x358, x360, x365, x370, x372, x373, x374, x375, x376, x377, x378, x379, x380, x381, x382, x383, x384, x385, x386, x387, x388, x389, x390, x391, x392, x393, x394, x395, x396, x397, x398, x399, x400, x401, x402, x403, x404);
 Formula newFormula=Formula.compose(FormulaOperator.AND, formulas);
-ier.solve(newFormula, bounds, factory, universe, 32); 
+ier.solve(newFormula, bounds, factory, universe, 4);
 Solver solver = new Solver();
 solver.options().setSolver(SATFactory.DefaultSAT4J);
-solver.options().setBitwidth(32);
+solver.options().setBitwidth(4);
+solver.options().setFlatten(false);
 solver.options().setIntEncoding(Options.IntEncoding.TWOSCOMPLEMENT);
 solver.options().setSymmetryBreaking(20);
 solver.options().setSkolemDepth(0);
@@ -1181,11 +1167,4 @@ System.out.println("Solving...");
 System.out.flush();
 Solution sol = solver.solve(x33,bounds);
 System.out.println(sol.toString());
-
-Iterator<Relation> itr = sol.instance().relationTuples().keySet().iterator();
-while(itr.hasNext()){
-	Relation r = itr.next();
-	System.out.println(r + ":: " +sol.instance().relationTuples().get(r));
-}
-
 }}

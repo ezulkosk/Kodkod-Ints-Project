@@ -355,6 +355,6 @@ System.out.println(sol.toString());
 IntExprReduction ier = new IntExprReduction();
 Formula[] formulas = ier.reduceIntExpressions(x20, x25, x30, x35, x40, x65, x70, x74, x78, x82, x83, x84, x85, x86, x87, x88, x89, x90, x91, x92, x93, x94, x95, x96, x97, x98, x99, x100);//x77, x78
  Formula newFormula=Formula.compose(FormulaOperator.AND, formulas);
-ier.solve(newFormula, bounds, factory, universe, 4); 
+ier.solve(newFormula, bounds, factory, universe, 32); 
 
 }}

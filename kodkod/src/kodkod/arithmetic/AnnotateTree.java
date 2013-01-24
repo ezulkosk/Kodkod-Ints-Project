@@ -87,6 +87,8 @@ public class AnnotateTree {
 			checkForInts((IntConstant) f);
 		else if (f instanceof BinaryIntExpression)
 			checkForInts((BinaryIntExpression) f);
+		else if (f instanceof UnaryExpression)
+			checkForInts((UnaryExpression) f);
 		else
 			System.out.println("ERROR" + f);
 	}
@@ -107,7 +109,7 @@ public class AnnotateTree {
 			if(f.left() instanceof BinaryExpression){ // && ((BinaryExpression)f.left()).right() instanceof Relation)
 				comparisonNodes.add(f);
 				f.variable = (Relation)quantExpression;
-				System.out.println(f.variable);
+				//System.out.println(f.variable);
 				if(multiplicity != null)
 					f.answer = (((BinaryExpression)f.left()).myToString(multiplicity.toString(), quantExpression.toString()));
 				else 
