@@ -43,13 +43,23 @@ public final class BinaryExpression extends Expression {
 	private final int arity;
 
 	//XXX added
-	public String myToString(String mult, String expression){
+	public String myToString_backup(String mult, String expression){
 		if(this.left() instanceof BinaryExpression)
 			return ((BinaryExpression)this.left()).myToString(mult, expression) + " " + this.op() + " " +this.right();
 		else if(this.left() instanceof Variable)
 			return mult + " " + expression + " " + this.op() + " " +this.right();
 		else 
 			return this.toString();
+	}
+	
+	public String myToString(String mult, String expression){
+		if(this.right() instanceof BinaryExpression)
+			return ((BinaryExpression)this.right()).myToString(mult,expression);
+		else if(this.right() instanceof Relation)
+			return this.right().toString();
+		else 
+			System.exit(1);
+		return "";
 	}
 	
 	

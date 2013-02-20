@@ -98,18 +98,35 @@ public class Recompute {
 				Relation rightMostRelation = null;
 				Tuple rightMostTuple = null;
 				if(cf.assignmentOnLeft){
-					rightMostRelation = getRightMostRelation((BinaryExpression)cf.left());
-					rightMostTuple = getRightMostTuple(cf.left(), null);
-					expr = cf.right();
+					if(cf.left() instanceof BinaryExpression){
+						rightMostRelation = getRightMostRelation((BinaryExpression)cf.left());
+						rightMostTuple = getRightMostTuple(cf.left(), null);
+						expr = cf.right();
+					}
+					else
+					{
+						rightMostRelation = (Relation)cf.left();
+						rightMostTuple = getRightMostTuple(cf.left(), null);
+						expr = cf.right();
+					}
 				}
 				else{
-					rightMostRelation = getRightMostRelation((BinaryExpression)cf.right());
-					rightMostTuple = getRightMostTuple(cf.right(), null);
-					expr = cf.left();
+					if(cf.right() instanceof BinaryExpression){
+						rightMostRelation = getRightMostRelation((BinaryExpression)cf.right());
+						rightMostTuple = getRightMostTuple(cf.right(), null);
+						expr = cf.left();
+					}
+					else
+					{
+						rightMostRelation = (Relation)cf.right();
+						rightMostTuple = getRightMostTuple(cf.right(), null);
+						expr = cf.left();
+					}
 				}
 				
 				if(rightMostTuple == null){
-					temps.add(new TemporaryTuple("",0));
+					temps.add(new TemporaryTuple("",computeByType(expr,null).right));//XXX newly added test
+					bogusRelations.add(rightMostRelation);//XXX newly added test
 				}
 				else{
 					bogusRelations.add(rightMostRelation);

@@ -106,21 +106,25 @@ public class AnnotateTree {
 		if(f.op() == ExprCompOperator.EQUALS && (f.left().isIntExpr || f.right().isIntExpr)){
 			
 			
-			if(f.left() instanceof BinaryExpression){ // && ((BinaryExpression)f.left()).right() instanceof Relation)
+			if(f.left() instanceof BinaryExpression || f.left() instanceof Relation){ // && ((BinaryExpression)f.left()).right() instanceof Relation)
 				comparisonNodes.add(f);
 				f.variable = (Relation)quantExpression;
 				//System.out.println(f.variable);
-				if(multiplicity != null)
+				if(f.left() instanceof Relation)
+					f.answer = f.left().toString();
+				else if(multiplicity != null)
 					f.answer = (((BinaryExpression)f.left()).myToString(multiplicity.toString(), quantExpression.toString()));
 				else 
 					f.answer = (((BinaryExpression)f.left()).myToString("",""));
 					
 			}
-			else if(f.right() instanceof BinaryExpression){
+			else if(f.right() instanceof BinaryExpression  || f.right() instanceof Relation){
 				f.assignmentOnLeft = false;
 				f.variable = (Relation)quantExpression;
 				comparisonNodes.add(f);
-				if(multiplicity != null)
+				if(f.right() instanceof Relation)
+					f.answer = f.right().toString();
+				else if(multiplicity != null)
 					f.answer = (((BinaryExpression)f.right()).myToString(multiplicity.toString(), quantExpression.toString()));
 				else 
 					f.answer = (((BinaryExpression)f.right()).myToString("",""));

@@ -127,8 +127,24 @@ public class BuildTree {
 		}
 
 		
-		public static Relation buildTree(Relation relation) {
-			return null;
+		public static Node buildTree(Relation relation) {
+			String answer =relation.toString();
+			if(swapAnswerPairs.containsKey(answer))
+			{
+				Expression e  = swapAnswerPairs.get(answer);//((Relation)binExpr.right()).name());
+				if(e instanceof IntToExprCast){
+					if(replace == Replace.INTCOMPARISON){
+						
+						IntExpression i =(IntExpression) ((IntToExprCast)e).intExpr();
+						return ReplaceVariablesInTree.build(i, quantVariable);// binExpr.left());
+					}
+					else if(replace == Replace.COMPARISON){
+						System.out.println("CHECK THIS WHEN IT COMES UP");
+						return ReplaceVariablesInTree.build(e, quantVariable);
+					}
+				}
+			}
+			return relation;
 			
 		}
 

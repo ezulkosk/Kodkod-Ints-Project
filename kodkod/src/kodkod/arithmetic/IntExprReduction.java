@@ -82,18 +82,8 @@ public final class IntExprReduction {
 			icf.reduction = Reduction.INTCOMPARISON;
 		}
 		int count = 0;
-		for(int i = 0; i < createNewTree.length; i++)
-			if(createNewTree[i])
-				count++;
+
 		
-		for(int i = 0; i < formulas.length; i++)
-		{
-			if(formulas[i].toString().contains("this/c532_total_RampUpTime.c532_total_RampUpTime_ref")){
-				Formula temp = formulas[i];
-				
-				System.out.print(temp);
-			}
-		}
 		
 		for(int i = 0; i < formulas.length; i++)
 			if(createNewTree[i]){
