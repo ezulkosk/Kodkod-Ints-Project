@@ -11,6 +11,7 @@ import kodkod.ast.IntComparisonFormula;
 import kodkod.ast.IntConstant;
 import kodkod.ast.IntToExprCast;
 import kodkod.ast.Node;
+import kodkod.ast.Relation;
 import kodkod.engine.Solution;
 import kodkod.engine.Solver;
 import kodkod.engine.config.Options;
