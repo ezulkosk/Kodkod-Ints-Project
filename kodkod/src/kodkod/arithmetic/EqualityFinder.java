@@ -3,35 +3,16 @@ package kodkod.arithmetic;
 import java.util.HashSet;
 
 import kodkod.ast.BinaryExpression;
-import kodkod.ast.BinaryFormula;
-import kodkod.ast.BinaryIntExpression;
 import kodkod.ast.ComparisonFormula;
-import kodkod.ast.Comprehension;
-import kodkod.ast.ConstantExpression;
-import kodkod.ast.ConstantFormula;
 import kodkod.ast.Decl;
 import kodkod.ast.Decls;
 import kodkod.ast.ExprToIntCast;
 import kodkod.ast.Expression;
-import kodkod.ast.IfExpression;
-import kodkod.ast.IfIntExpression;
 import kodkod.ast.IntComparisonFormula;
-import kodkod.ast.IntConstant;
 import kodkod.ast.IntToExprCast;
-import kodkod.ast.MultiplicityFormula;
-import kodkod.ast.NaryExpression;
-import kodkod.ast.NaryFormula;
-import kodkod.ast.NaryIntExpression;
 import kodkod.ast.Node;
-import kodkod.ast.NotFormula;
-import kodkod.ast.ProjectExpression;
 import kodkod.ast.QuantifiedFormula;
 import kodkod.ast.Relation;
-import kodkod.ast.RelationPredicate;
-import kodkod.ast.SumExpression;
-import kodkod.ast.UnaryExpression;
-import kodkod.ast.UnaryIntExpression;
-import kodkod.ast.Variable;
 import kodkod.ast.operator.ExprCastOperator;
 import kodkod.ast.operator.ExprCompOperator;
 import kodkod.ast.visitor.AbstractVoidVisitor;
@@ -105,25 +86,33 @@ public class EqualityFinder extends AbstractVoidVisitor {
 			
 			if(f.left() instanceof BinaryExpression || f.left() instanceof Relation){ // && ((BinaryExpression)f.left()).right() instanceof Relation)
 				comparisonNodes.add(f);
-				f.variable = (Relation)quantExpression;
+				//f.variable = (Relation)quantExpression;
+				IntExprReduction.variables.put(f, quantExpression);
 				//System.out.println(f.variable);
 				if(f.left() instanceof Relation)
-					f.answer = f.left().toString();
+					//f.answer = f.left().toString();
+					IntExprReduction.answers.put(f, f.left().toString());
 				else if(multiplicity != null)
-					f.answer = myToString((BinaryExpression)f.left(), multiplicity.toString(), quantExpression.toString());
+					//f.answer = myToString((BinaryExpression)f.left(), multiplicity.toString(), quantExpression.toString());
+					IntExprReduction.answers.put(f, 
+							myToString((BinaryExpression)f.left(), multiplicity.toString(), quantExpression.toString()));
 				else 
-					f.answer = myToString((BinaryExpression)f.left(), "","");
-					
+					//f.answer = myToString((BinaryExpression)f.left(), "","");
+					IntExprReduction.answers.put(f, myToString((BinaryExpression)f.left(), "",""));
 			}
 			else if(f.right() instanceof BinaryExpression  || f.right() instanceof Relation){
-				f.variable = (Relation)quantExpression;
+				//f.variable = (Relation)quantExpression;
+				IntExprReduction.variables.put(f, quantExpression);
 				comparisonNodes.add(f);
 				if(f.right() instanceof Relation)
-					f.answer = f.right().toString();
+					//f.answer = f.right().toString();
+					IntExprReduction.answers.put(f, f.right().toString());
 				else if(multiplicity != null)
-					f.answer = myToString((BinaryExpression)f.right(), multiplicity.toString(), quantExpression.toString());
+					//f.answer = myToString((BinaryExpression)f.right(), multiplicity.toString(), quantExpression.toString());
+					IntExprReduction.answers.put(f, myToString((BinaryExpression)f.right(), multiplicity.toString(), quantExpression.toString()));
 				else 
-					f.answer = myToString((BinaryExpression)f.right(), "","");
+					//f.answer = myToString((BinaryExpression)f.right(), "","");
+					IntExprReduction.answers.put(f, myToString((BinaryExpression)f.right(), "",""));
 			}
 				
 		}

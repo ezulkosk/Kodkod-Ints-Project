@@ -285,7 +285,8 @@ public class ArithmeticStorageElider implements ReturnVisitor<Node,Node,Node,Nod
 			//else if(n.reduction == Reduction.EQUALEXPRESSIONS){
 			else if(IntExprReduction.reductions_equalExpressions.contains(n)){
 				ComparisonFormula tempForm = (ComparisonFormula)n;
-				return new ComparisonFormula(tempForm.right(), tempForm.op(), tempForm.equalExpression);
+				//return new ComparisonFormula(tempForm.right(), tempForm.op(), tempForm.equalExpression);
+				return new ComparisonFormula(tempForm.right(), tempForm.op(), IntExprReduction.equalExpressions.get(tempForm));
 			}
 			//else if( n.reduction == Reduction.COMPARISON)
 			else if(IntExprReduction.reductions_comparison.contains(n)){

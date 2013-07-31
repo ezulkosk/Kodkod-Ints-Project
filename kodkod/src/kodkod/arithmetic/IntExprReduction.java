@@ -19,6 +19,7 @@ import kodkod.engine.satlab.SATFactory;
 import kodkod.instance.Bounds;
 import kodkod.instance.TupleFactory;
 import kodkod.instance.Universe;
+import kodkod.util.collections.FixedMap;
 import kodkod.util.collections.IdentityHashSet;
 
 public final class IntExprReduction {
@@ -48,6 +49,12 @@ public final class IntExprReduction {
 	static IdentityHashSet<Node> reductions_intComparison = new IdentityHashSet<Node>();
 	static IdentityHashSet<Node> reductions_intConstant = new IdentityHashSet<Node>();
 	
+	//***** is there any problem with using a regular hashmap?
+	static HashMap<Node, String> answers = new HashMap<Node, String>();
+	//can the second type param be changed to Expression?
+	static HashMap<Node, Node> variables = new HashMap<Node, Node>();
+	static HashMap<Node, Expression> equalExpressions = new HashMap<Node, Expression>();
+	
 	//adds AST node to proper reductions set, making sure to remove it from any others first
 	//the removal checks can be deleted eventually
 	public void addReduction(Node n, IdentityHashSet<Node> set){
@@ -60,6 +67,12 @@ public final class IntExprReduction {
 		reductions_intConstant.remove(n);
 		set.add(n);
 	}
+	
+	//public void addToMap(Node key, Object value, FixedMap<Node,Object> map){
+	//	
+	//}
+	
+	
 	
 	public Formula[] reduceIntExpressions(Formula...formulas)
 	{
@@ -92,17 +105,24 @@ public final class IntExprReduction {
 				{
 					//cf.reduction = Reduction.INTCONSTANT;
 					addReduction(cf, reductions_intConstant);
-					swapAnswerPairs.put(cf.answer, arithmetic_expression);
+					//swapAnswerPairs.put(cf.answer, arithmetic_expression);
+					swapAnswerPairs.put(answers.get(cf), arithmetic_expression);
 					continue;
 				}
 			
-			if(swapAnswerPairs.containsKey(cf.answer)){
-				cf.equalExpression = swapAnswerPairs.get(cf.answer);
+			//if(swapAnswerPairs.containsKey(cf.answer)){
+			if(swapAnswerPairs.containsKey(answers.get(cf))){
+				//cf.equalExpression = swapAnswerPairs.get(cf.answer);
+				//cf.equalExpression = swapAnswerPairs.get(answers.get(cf));
+				equalExpressions.put(cf, (Expression) swapAnswerPairs.get(answers.get(cf)));
 				//cf.reduction=Reduction.EQUALEXPRESSIONS;
 				addReduction(cf, reductions_equalExpressions);
 			}
-			swapAnswerPairs.put(cf.answer, arithmetic_expression);
-			bogusVariables.add(cf.answer);
+			//swapAnswerPairs.put(cf.answer, arithmetic_expression);
+			swapAnswerPairs.put(answers.get(cf), arithmetic_expression);
+			//bogusVariables.add(cf.answer);
+			bogusVariables.add(answers.get(cf));
+			
 		}
 		for(IntComparisonFormula icf : intComparisonNodes){
 			//icf.reduction = Reduction.INTCOMPARISON;

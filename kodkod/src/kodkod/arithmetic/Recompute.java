@@ -59,10 +59,12 @@ public class Recompute {
 		for(ComparisonFormula cf: formulas)
 		{
 			Expression expr;
+			
 			//if(cf.reduction != Reduction.DELETE)
-			if(IntExprReduction.reductions_delete.contains(cf))
+			if(!IntExprReduction.reductions_delete.contains(cf))
 				continue;
-			TupleSet ts = relationTuples.get(cf.variable);
+			//TupleSet ts = relationTuples.get(cf.variable);
+			TupleSet ts = relationTuples.get(IntExprReduction.variables.get(cf));
 			ArrayList<TemporaryTuple> temps = new ArrayList<TemporaryTuple>();
 			if(ts != null){
 				Iterator<Tuple> itr = ts.iterator();
