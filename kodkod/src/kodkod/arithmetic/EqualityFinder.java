@@ -110,25 +110,37 @@ public class EqualityFinder extends AbstractVoidVisitor {
 				if(f.left() instanceof Relation)
 					f.answer = f.left().toString();
 				else if(multiplicity != null)
-					f.answer = (((BinaryExpression)f.left()).myToString(multiplicity.toString(), quantExpression.toString()));
+					f.answer = myToString((BinaryExpression)f.left(), multiplicity.toString(), quantExpression.toString());
 				else 
-					f.answer = (((BinaryExpression)f.left()).myToString("",""));
+					f.answer = myToString((BinaryExpression)f.left(), "","");
 					
 			}
 			else if(f.right() instanceof BinaryExpression  || f.right() instanceof Relation){
-				f.assignmentOnLeft = false;
 				f.variable = (Relation)quantExpression;
 				comparisonNodes.add(f);
 				if(f.right() instanceof Relation)
 					f.answer = f.right().toString();
 				else if(multiplicity != null)
-					f.answer = (((BinaryExpression)f.right()).myToString(multiplicity.toString(), quantExpression.toString()));
+					f.answer = myToString((BinaryExpression)f.right(), multiplicity.toString(), quantExpression.toString());
 				else 
-					f.answer = (((BinaryExpression)f.right()).myToString("",""));
+					f.answer = myToString((BinaryExpression)f.right(), "","");
 			}
 				
 		}
 	}
+
+	// TODO: rewrite this myToString() method
+	static String myToString(final BinaryExpression be, final String mult, final String expression){
+		if(be.right() instanceof BinaryExpression)
+			return myToString(((BinaryExpression)be.right()), mult,expression);
+		else if(be.right() instanceof Relation)
+			return be.right().toString();
+		else 
+			System.exit(1); // TODO: remove this call
+		return "";
+	}
+	
+
 	
 	public void visit(IntComparisonFormula f)
 	{

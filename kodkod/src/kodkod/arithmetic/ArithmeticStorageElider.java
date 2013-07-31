@@ -120,7 +120,7 @@ public class ArithmeticStorageElider implements ReturnVisitor<Node,Node,Node,Nod
 
 		
 		public Node visit(BinaryExpression binExpr) {
-			String answer = binExpr.myToString(multiplicity, quantExpression);
+			String answer = EqualityFinder.myToString(binExpr, multiplicity, quantExpression);
 			if(swapAnswerPairs.containsKey(answer))
 			{
 				Expression e  = swapAnswerPairs.get(answer);//((Relation)binExpr.right()).name());
