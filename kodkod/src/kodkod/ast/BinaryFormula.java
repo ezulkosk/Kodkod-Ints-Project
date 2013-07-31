@@ -48,7 +48,7 @@ public final class BinaryFormula extends Formula {
      * @ensures this.left' = left && this.right' = right &&  this.op' = op
      * @throws NullPointerException  left = null || right = null || op = null
      */
-   public BinaryFormula(Formula left, FormulaOperator op, Formula right) { //XXX get rid of public to revert
+   BinaryFormula(Formula left, FormulaOperator op, Formula right) {
         this.left = left;
         this.right = right;
         this.op = op;

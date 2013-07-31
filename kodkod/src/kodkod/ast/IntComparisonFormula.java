@@ -46,7 +46,7 @@ public final class IntComparisonFormula extends Formula {
 	 * @ensures this.left' = left && this.right' = right && this.op' = op
 	 * @throws NullPointerException  left = null || right = null || op = null
 	 */
-	public IntComparisonFormula(final IntExpression left, final IntCompOperator op, final IntExpression right) {//XXX remove public
+	IntComparisonFormula(final IntExpression left, final IntCompOperator op, final IntExpression right) {//XXX remove public
 		this.left = left;
 		this.right = right;
 		this.op = op;

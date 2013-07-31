@@ -48,7 +48,7 @@ public final class QuantifiedFormula extends Formula  {
      *          this.formula' = formula
      * @throws NullPointerException  quantifier = null || decls = null || formula = null
      */
-    public QuantifiedFormula(Quantifier quantifier, Decls declarations, Formula formula) {//XXX remove public
+    QuantifiedFormula(Quantifier quantifier, Decls declarations, Formula formula) {//XXX remove public
         if (quantifier == null || declarations == null || formula == null) {
             throw new NullPointerException("null arg");
         }

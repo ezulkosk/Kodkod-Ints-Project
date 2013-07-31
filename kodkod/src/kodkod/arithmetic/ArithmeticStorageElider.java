@@ -226,28 +226,32 @@ public class ArithmeticStorageElider implements ReturnVisitor<Node,Node,Node,Nod
 
 		
 		public Formula visit(IntComparisonFormula n) {
-			Formula newFormula = null;
 			//if(n.reduction == Reduction.INTCOMPARISON ){
 			if(IntExprReduction.reductions_intComparison.contains(n)){
 				replace = Replace.INTCOMPARISON;
-				newFormula = new IntComparisonFormula((IntExpression)n.left().accept(this), n.op(), (IntExpression)n.right().accept(this));
+				final IntExpression newIE = (IntExpression)((IntExpression)n.left().accept(this));
+				final Formula newFormula = newIE.compare(n.op(), (IntExpression)n.right().accept(this));
 				replace = Replace.FALSE;
+				return newFormula;
+			} else {
+				return null;
 			}
-			return newFormula;
 		}
 
-		public QuantifiedFormula visit(QuantifiedFormula quantFormula) {	
-			Decls decls = quantFormula.decls();
-			Decl d = decls.get(0);
+		public QuantifiedFormula visit(final QuantifiedFormula qf) {	
+			final Decls decls = qf.decls();
+			final Decl d = decls.get(0);
 			multiplicity = d.multiplicity().toString();
 			quantVariable = d.variable();
 			quantExpression = d.expression().toString();
-			QuantifiedFormula q = new QuantifiedFormula(quantFormula.quantifier(), 
-					quantFormula.decls(), (Formula)quantFormula.formula().accept(this));
+			final Formula f2 = (Formula)qf.formula().accept(this);
+			final QuantifiedFormula qf2 = (QuantifiedFormula) f2.quantify(qf.quantifier(), decls);
+//			QuantifiedFormula q = new QuantifiedFormula(quantFormula.quantifier(), 
+//					quantFormula.decls(), (Formula)quantFormula.formula().accept(this));
 			multiplicity = null;
 			quantVariable = null;
 			quantExpression = null;
-			return q;
+			return qf2;
 		}
 		
 		public NaryFormula visit(NaryFormula formula) {
@@ -255,8 +259,11 @@ public class ArithmeticStorageElider implements ReturnVisitor<Node,Node,Node,Nod
 			
 		}
 		
-		public BinaryFormula visit(BinaryFormula binFormula) {
-			return new BinaryFormula((Formula)binFormula.left().accept(this), binFormula.op(), (Formula)binFormula.right().accept(this));
+		public BinaryFormula visit(final BinaryFormula bf) {
+			final Formula left = (Formula)bf.left().accept(this);
+			final Formula right = (Formula)bf.right().accept(this);
+			return (BinaryFormula) left.compose(bf.op(), right);
+//			return new BinaryFormula(left, binFormula.op(), right);
 		}
 
 		
