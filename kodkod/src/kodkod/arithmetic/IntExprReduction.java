@@ -27,56 +27,49 @@ public final class IntExprReduction {
 	public HashMap<String, Expression> swapAnswerPairs= new HashMap<String, Expression>();
 	public HashSet<String> bogusVariables = new HashSet<String>();//Relation>(); 
 	
-	Formula newTree;
+	Formula modifiedTree;
 	public Formula[] oldFormulas;
 	public boolean[] createNewTree;
 	
 	public Formula[] reduceIntExpressions(Formula...formulas)
 	{
-		AnnotateTree.start();
 		createNewTree = new boolean[formulas.length];
 		for(int i = 0; i < formulas.length; i++) 
 		{
 			Formula f = formulas[i];
-			AnnotateTree.start();
-			AnnotateTree.callByType(f);
-			HashSet<ComparisonFormula> currentComparisonNodes = AnnotateTree.comparisonNodes;
-			HashSet<IntComparisonFormula> currentInequalityNodes = AnnotateTree.intComparisonNodes;
-			createNewTree[i] = false;
-			if(!currentComparisonNodes.isEmpty() || !currentInequalityNodes.isEmpty())
-				createNewTree[i] = true;
-			
+			EqualityFinder equalityFinder = new EqualityFinder();
+			f.accept(equalityFinder);
+			HashSet<ComparisonFormula> currentComparisonNodes = equalityFinder.comparisonNodes;
+			HashSet<IntComparisonFormula> currentInequalityNodes = equalityFinder.intComparisonNodes;
+			createNewTree[i] = !(currentComparisonNodes.isEmpty() && currentInequalityNodes.isEmpty());
 			comparisonNodes.addAll(currentComparisonNodes);
 			intComparisonNodes.addAll(currentInequalityNodes);
 		}
 		for(ComparisonFormula cf : comparisonNodes){
-			Relation answer;
-			Expression expr;
+			//the "independent side" of the comparison formula
+			Expression arithmetic_expression;
 			if(cf.assignmentOnLeft){
-				//answer = (Relation)((BinaryExpression)cf.left()).right();
-				
-				expr = cf.right();
+				arithmetic_expression = cf.right();
 			}
 			else{
-				//answer = (Relation)((BinaryExpression)cf.right()).right();
-				expr = cf.left();
+				arithmetic_expression = cf.left();
 			}
 			cf.reduction = Reduction.DELETE;
-			//check if expr is a constant
-			if(expr instanceof IntToExprCast)
-				if(((IntToExprCast)expr).intExpr() instanceof IntConstant)
+			//check if arithmetic_expression is a constant
+			if(arithmetic_expression instanceof IntToExprCast)
+				if(((IntToExprCast)arithmetic_expression).intExpr() instanceof IntConstant)
 				{
 					cf.reduction = Reduction.INTCONSTANT;
-					swapAnswerPairs.put(cf.answer, expr);
+					swapAnswerPairs.put(cf.answer, arithmetic_expression);
 					continue;
 				}
 			
-			if(swapAnswerPairs.containsKey(cf.answer)){//answer.name())){
-				cf.equalExpression = swapAnswerPairs.get(cf.answer);//answer.name());
+			if(swapAnswerPairs.containsKey(cf.answer)){
+				cf.equalExpression = swapAnswerPairs.get(cf.answer);
 				cf.reduction=Reduction.EQUALEXPRESSIONS;
 			}
-			swapAnswerPairs.put(cf.answer, expr);//answer.name(), expr);
-			bogusVariables.add(cf.answer);//answer);
+			swapAnswerPairs.put(cf.answer, arithmetic_expression);
+			bogusVariables.add(cf.answer);
 		}
 		for(IntComparisonFormula icf : intComparisonNodes){
 			icf.reduction = Reduction.INTCOMPARISON;
@@ -89,12 +82,12 @@ public final class IntExprReduction {
 			if(createNewTree[i]){
 				Formula f = formulas[i];
 				
-				//BuildTree bt = new BuildTree(f, swapAnswerPairs);
-				BuildTree bt = new BuildTree(f,swapAnswerPairs);
-				newTree = (Formula)bt.build();
-				if(!f.toString().equals(newTree.toString()))
-					System.out.print("count"+count);
-				formulas[i] = newTree;
+				//ArithmeticStorageElider bt = new ArithmeticStorageElider(f, swapAnswerPairs);
+				ArithmeticStorageElider elider = new ArithmeticStorageElider(swapAnswerPairs);
+				modifiedTree = (Formula)f.accept(elider);
+				//if(!f.toString().equals(newTree.toString()))
+				//	System.out.print("count"+count);
+				formulas[i] = modifiedTree;
 			}
 		
 		return formulas;

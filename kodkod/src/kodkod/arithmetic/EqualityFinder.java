@@ -22,6 +22,7 @@ import kodkod.ast.MultiplicityFormula;
 import kodkod.ast.NaryExpression;
 import kodkod.ast.NaryFormula;
 import kodkod.ast.NaryIntExpression;
+import kodkod.ast.Node;
 import kodkod.ast.NotFormula;
 import kodkod.ast.ProjectExpression;
 import kodkod.ast.QuantifiedFormula;
@@ -33,26 +34,27 @@ import kodkod.ast.UnaryIntExpression;
 import kodkod.ast.Variable;
 import kodkod.ast.operator.ExprCastOperator;
 import kodkod.ast.operator.ExprCompOperator;
-import kodkod.ast.operator.Multiplicity;
+import kodkod.ast.visitor.AbstractVoidVisitor;
 
 //Traverses the tree marking equality and inequality nodes 
-public class AnnotateTree {
+public class EqualityFinder extends AbstractVoidVisitor {
 
-	public static HashSet<ComparisonFormula> comparisonNodes = new HashSet<ComparisonFormula>();
-	public static HashSet<IntComparisonFormula> intComparisonNodes = new HashSet<IntComparisonFormula>();
+	public HashSet<ComparisonFormula> comparisonNodes = new HashSet<ComparisonFormula>();
+	public HashSet<IntComparisonFormula> intComparisonNodes = new HashSet<IntComparisonFormula>();
 	
 	
-	public static String quantVariable;
-	public static Expression quantExpression;
-	public static String multiplicity; 
+	public String quantVariable;
+	public Expression quantExpression;
+	public String multiplicity; 
 	
 	
-	public static void start()
+	
+	public EqualityFinder()
 	{
 		comparisonNodes = new HashSet<ComparisonFormula>();
 		intComparisonNodes = new HashSet<IntComparisonFormula>();
 	}
-	
+	/*
 	public static void callByType(Object f)
 	{
 		if (f instanceof BinaryFormula)
@@ -92,17 +94,12 @@ public class AnnotateTree {
 		else
 			System.out.println("ERROR" + f);
 	}
+	*/
 	
-	public static void checkForInts(BinaryFormula f)
+	public void visit(ComparisonFormula f)
 	{
-		callByType(f.left());
-		callByType(f.right());
-	}
-	
-	public static void checkForInts(ComparisonFormula f)
-	{
-		callByType(f.left());
-		callByType(f.right());
+		f.left().accept(this);
+		f.right().accept(this);
 		if(f.op() == ExprCompOperator.EQUALS && (f.left().isIntExpr || f.right().isIntExpr)){
 			
 			
@@ -132,133 +129,42 @@ public class AnnotateTree {
 				
 		}
 	}
-	public static void checkForInts(ConstantFormula f)
-	{
-		
-	}
 	
-	public static void checkForInts(MultiplicityFormula f)
+	public void visit(IntComparisonFormula f)
 	{
-
-	}
-	
-	public static void checkForInts(IntComparisonFormula f)
-	{
-		callByType(f.left());
-		callByType(f.right());
+		f.left().accept(this);
+		f.right().accept(this);
 		intComparisonNodes.add(f);
 	}
 	
-	public static void checkForInts(QuantifiedFormula f)
+	public void visit(QuantifiedFormula f)
 	{
 		Decls decls = f.decls();
 		Decl d = decls.get(0);
 		multiplicity = d.multiplicity().toString();
 		quantVariable = d.variable().toString();
 		quantExpression = d.expression();
-		callByType(f.formula());
+		f.formula().accept(this);
 		multiplicity = null;
 		quantVariable = null;
 		quantExpression = null;
 	}
 	
-	public static void checkForInts(NaryFormula f)
-	{
-
-	}
-	
-	public static void checkForInts(NotFormula f)
-	{
-
-	}
-	
-	public static void checkForInts(Decls decls) {
-		
-	}
-	
-	public static void checkForInts(Decl decl) {		
-		
-	}
-	
-	public static void checkForInts(Relation relation) {
-		//System.out.println(relation);
-	}
-	
-	public static void checkForInts(Variable variable) {
-			//System.out.println(variable);
-	}
-	
-	public static void checkForInts(ConstantExpression constExpr) {	
-		
-	}
-	
-	public static void checkForInts(UnaryExpression unaryExpr) {	
-		
-	}
-	
-	public static void checkForInts(BinaryExpression binExpr) {
-		//System.out.println(multiplicity+ " " + quantVariable+ " " + quantExpression);
-
-		callByType(binExpr.left());
-		callByType(binExpr.right());
-		//System.out.println(binExpr);
-	}
-
-	public static void checkForInts(NaryExpression expr) {
-	}
-
-	public static void checkForInts(Comprehension comprehension) {
-		
-	}
-	
-	public static void checkForInts(IfExpression ifExpr) {
-		
-	}
-
-	public static void checkForInts(ProjectExpression project) {
-		
-	}
-	
-	public static void checkForInts(IntToExprCast castExpr) {
+	public void visit(IntToExprCast castExpr) {
 		castExpr.isIntExpr = true;
-		callByType(castExpr.intExpr());
+		castExpr.intExpr().accept(this);
 	}
 	
-	public static void checkForInts(IntConstant intConst) {
-
-	}
-
-	public static void checkForInts(IfIntExpression intExpr) {
-		
-	}
 	
-	public static void checkForInts(ExprToIntCast intExpr) {
+	public void visit(ExprToIntCast intExpr) {
 		if(intExpr.op() == ExprCastOperator.SUM){
-			callByType(intExpr.expression());
+			intExpr.expression().accept(this);
 		}
 	}
 
-	
-	public static void checkForInts(NaryIntExpression intExpr) {
-		
-	}
-	
-	public static void checkForInts(BinaryIntExpression intExpr) {
-		callByType(intExpr.left());
-		callByType(intExpr.right());
-	}
-	
-	public static void checkForInts(UnaryIntExpression intExpr) {
-		
-	}
 
-	
-	public static void checkForInts(SumExpression intExpr) {
-		
-	}
-
-	public static void checkForInts(RelationPredicate predicate) {
-		
+	protected boolean visited(Node n) {
+		return false;
 	}
 	
 }
