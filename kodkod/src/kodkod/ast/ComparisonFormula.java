@@ -41,9 +41,6 @@ public final class ComparisonFormula extends Formula{
     private final Expression right;
     private final ExprCompOperator op;
     
-    //XXX added
-    //public String answer;
-    //public Relation variable= null;
     
     /**  
      * Constructs a new comparison formula: left op  right
@@ -52,7 +49,7 @@ public final class ComparisonFormula extends Formula{
      * * @throws NullPointerException  left = null || right = null || op = null
      * @throws IllegalArgumentException  left.arity != right.arity
      */
-    public ComparisonFormula(Expression left, ExprCompOperator op, Expression right) { //XXX remove public
+    ComparisonFormula(Expression left, ExprCompOperator op, Expression right) {
         if (left.arity()!=right.arity()) {
             throw new IllegalArgumentException(
             		"Arity mismatch: " + left + "::" + left.arity() + 

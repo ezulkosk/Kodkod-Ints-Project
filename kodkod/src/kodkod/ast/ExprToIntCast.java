@@ -45,7 +45,7 @@ public final class ExprToIntCast extends IntExpression {
 	 * @throws NullPointerException  expression = null || op = null
 	 * @throws IllegalArgumentException  op = SUM && child.arity != 1
 	 */
-	public ExprToIntCast(Expression child, ExprCastOperator op) { //XXX remove public
+	ExprToIntCast(Expression child, ExprCastOperator op) {
 		if (child.arity()>1 && op==ExprCastOperator.SUM) 
 			throw new IllegalArgumentException("cannot apply " + op + " to " + child);
 		this.expression = child;

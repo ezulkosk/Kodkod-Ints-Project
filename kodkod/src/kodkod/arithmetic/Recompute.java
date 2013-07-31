@@ -24,6 +24,7 @@ import kodkod.instance.Tuple;
 import kodkod.instance.TupleFactory;
 import kodkod.instance.TupleSet;
 import kodkod.instance.Universe;
+import kodkod.util.ints.IndexedEntry;
 import kodkod.util.ints.IntIterator;
 import kodkod.util.ints.IntSet;
 
@@ -139,6 +140,7 @@ public class Recompute {
 			tempTuples.add(temps);
 		}
 		boundTemporaryTuplesToBitwidth(tempTuples);
+		System.out.println("TEMP" + tempTuples);
 		return computeNewSolution(sol, tempTuples);
 	}
 	/*
@@ -247,6 +249,7 @@ public class Recompute {
 					newUniverseList.add(t.right()+"");
 		
 		Universe newUniverse = new Universe(newUniverseList);
+		System.out.println("B" + newUniverse);
 		Instance newInstance = new Instance(newUniverse);
 		Set<Relation> keys =  relationTuples.keySet();
 		Iterator<Relation> itr2 = keys.iterator();
@@ -292,6 +295,7 @@ public class Recompute {
 				newInstance.add(bogusRelations.get(i), newTupleSet);
 				String newInt = /*Integer.parseInt(*/(String)newTupleSet.iterator().next().atom(newTupleSet.arity()-1);
 				//b.boundExactly(newInt, factory.range(factory.tuple(newInt+"" ),factory.tuple( newInt+"" )));
+				System.out.println("NEWINTS: " + newInt);
 				newInts.add(newInt);
 			}
 		}
@@ -304,25 +308,33 @@ public class Recompute {
 		Universe lastUniverse = new Universe(newUniverseList);
 		TupleFactory lastFactory = lastUniverse.factory();
 		//Bounds b = new Bounds(lastUniverse);
-		Bounds b = new Bounds(lastUniverse);
+		Bounds b = new Bounds(newUniverse);//(lastUniverse);
 		IntSet set = oldInstance.ints();
 		IntIterator intitr = set.iterator();
 		while(intitr.hasNext()){
 			//TupleFactory factory = newUniverse.factory();
+			System.out.println("in");
 			int i = intitr.next();
-			b.boundExactly(i, lastFactory.range(lastFactory.tuple(i+"" ),lastFactory.tuple( i+"" )));
+			b.boundExactly(i, newUniverse.factory().range(newUniverse.factory().tuple(i+"" ),newUniverse.factory().tuple( i+"" )));
 		}	
 		
 		for(String s: newInts){
+			System.out.println("in");
 			//TupleFactory factory = newUniverse.factory();
-			b.boundExactly(Integer.parseInt(s), lastFactory.range(lastFactory.tuple(s),lastFactory.tuple( s)));
+			b.boundExactly(Integer.parseInt(s), newUniverse.factory().range(newUniverse.factory().tuple(s),newUniverse.factory().tuple( s)));
 		}
-		newInstance.ints = b.intBounds();
+		//newInstance.ints = b.intBounds();
 		Instance lastInstance = new Instance(lastUniverse, newInstance.tuples, b.intBounds());
+		Instance lastInstance2 = new Instance(lastUniverse);
+		for(IndexedEntry<TupleSet> t : b.intBounds()){
+			newInstance.add(t.index(), t.value());//lastInstance2.add(t.index(), t.value());
+		}
+		//for(Relation r : newInstance.relationTuples().keySet()){
+		//	lastInstance2.add(r, newInstance.relationTuples().get(r));
+		//}
+		//System.out.println(lastInstance);
 		
-		///System.out.println(lastInstance);
-		
-		return new Solution(oldSolution.outcome(), oldSolution.stats(), lastInstance, oldSolution.proof());
+		return new Solution(oldSolution.outcome(), oldSolution.stats(), newInstance, oldSolution.proof());
 	}
 	
 	

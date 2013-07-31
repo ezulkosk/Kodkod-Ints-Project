@@ -49,7 +49,7 @@ public final class BinaryExpression extends Expression {
 	 * @throws NullPointerException  left = null || right = null || op = null
 	 * @throws IllegalArgumentException  left and right cannot be combined with the specified operator.
 	 */
-	public BinaryExpression(final Expression left, final ExprOperator op, final Expression right) { //XXX remove public
+	BinaryExpression(final Expression left, final ExprOperator op, final Expression right) { 
 		switch(op) { 
 		case UNION : case INTERSECTION : case DIFFERENCE : case OVERRIDE :
 			this.arity = left.arity();

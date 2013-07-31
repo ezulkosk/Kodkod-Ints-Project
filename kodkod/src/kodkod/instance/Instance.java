@@ -48,7 +48,7 @@ import kodkod.util.ints.TreeSequence;
  */
 public final class Instance implements Cloneable {
 	public final Map<Relation, TupleSet> tuples;
-	public SparseSequence<TupleSet> ints; //XXX should be private
+	SparseSequence<TupleSet> ints;
 	private final Universe universe;
 	
 	public Instance(Universe u, Map<Relation, TupleSet> tuples, SparseSequence<TupleSet> ints) {

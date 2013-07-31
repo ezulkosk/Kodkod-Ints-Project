@@ -45,7 +45,7 @@ public final class IntToExprCast extends Expression {
 	 * @requires intExpr != null && op != null
 	 * @ensures this.intexpr' = intExpr
 	 */
-	public IntToExprCast(IntExpression intExpr, IntCastOperator op) { //TODO remove public
+	IntToExprCast(IntExpression intExpr, IntCastOperator op) { 
 		this.intExpr = intExpr;
 		this.op = op;
 	}

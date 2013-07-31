@@ -291,7 +291,7 @@ public final class TupleFactory {
 	 * @invariant index = sum({i: [0..arity) | TupleFactory.this.universe.index(atoms[i]) * TupleFactory.this.base^(arity - 1 - i))
 	 * @author Emina Torlak
 	 */
-	public final class IntTuple extends Tuple { //XXX Should be private
+	private final class IntTuple extends Tuple {
 		private final int arity, index;
 		
 		/**  
