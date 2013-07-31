@@ -47,7 +47,6 @@ public abstract class Node {
 	public Expression equalExpression = null;
     public Reduction reduction = Reduction.NONE;
     public boolean isIntExpr = false;
-    public boolean assignmentOnLeft = true;
     /**
      * Accepts the given visitor and returns the result
      * of the visit (i.e. the result of the call visitor.visit(this))

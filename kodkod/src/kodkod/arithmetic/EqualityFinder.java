@@ -116,7 +116,6 @@ public class EqualityFinder extends AbstractVoidVisitor {
 					
 			}
 			else if(f.right() instanceof BinaryExpression  || f.right() instanceof Relation){
-				f.assignmentOnLeft = false;
 				f.variable = (Relation)quantExpression;
 				comparisonNodes.add(f);
 				if(f.right() instanceof Relation)

@@ -73,15 +73,15 @@ public class Recompute {
 					//System.out.println(tuple);
 					Relation rightMostRelation = null;
 					Tuple rightMostTuple = null;
-					if(cf.assignmentOnLeft){
-						rightMostRelation = getRightMostRelation((BinaryExpression)cf.left());
-						rightMostTuple = getRightMostTuple(cf.left(), tuple);
-						expr = cf.right();
-					}
-					else{
+					if(cf.right() instanceof BinaryExpression || cf.right() instanceof Relation){
 						rightMostRelation = getRightMostRelation((BinaryExpression)cf.right());
 						rightMostTuple = getRightMostTuple(cf.right(), tuple);
 						expr = cf.left();
+					}
+					else{
+						rightMostRelation = getRightMostRelation((BinaryExpression)cf.left());
+						rightMostTuple = getRightMostTuple(cf.left(), tuple);
+						expr = cf.right();
 					}
 					if(rightMostTuple == null){
 						temps.add(new TemporaryTuple("",0));
@@ -97,20 +97,7 @@ public class Recompute {
 			{
 				Relation rightMostRelation = null;
 				Tuple rightMostTuple = null;
-				if(cf.assignmentOnLeft){
-					if(cf.left() instanceof BinaryExpression){
-						rightMostRelation = getRightMostRelation((BinaryExpression)cf.left());
-						rightMostTuple = getRightMostTuple(cf.left(), null);
-						expr = cf.right();
-					}
-					else
-					{
-						rightMostRelation = (Relation)cf.left();
-						rightMostTuple = getRightMostTuple(cf.left(), null);
-						expr = cf.right();
-					}
-				}
-				else{
+				if(cf.right() instanceof BinaryExpression || cf.right() instanceof Relation){
 					if(cf.right() instanceof BinaryExpression){
 						rightMostRelation = getRightMostRelation((BinaryExpression)cf.right());
 						rightMostTuple = getRightMostTuple(cf.right(), null);
@@ -121,6 +108,19 @@ public class Recompute {
 						rightMostRelation = (Relation)cf.right();
 						rightMostTuple = getRightMostTuple(cf.right(), null);
 						expr = cf.left();
+					}
+				}
+				else{
+					if(cf.left() instanceof BinaryExpression){
+						rightMostRelation = getRightMostRelation((BinaryExpression)cf.left());
+						rightMostTuple = getRightMostTuple(cf.left(), null);
+						expr = cf.right();
+					}
+					else
+					{
+						rightMostRelation = (Relation)cf.left();
+						rightMostTuple = getRightMostTuple(cf.left(), null);
+						expr = cf.right();
 					}
 				}
 				

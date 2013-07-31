@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import kodkod.ast.BinaryExpression;
 import kodkod.ast.ComparisonFormula;
 import kodkod.ast.Expression;
 import kodkod.ast.Formula;
@@ -48,11 +49,11 @@ public final class IntExprReduction {
 		for(ComparisonFormula cf : comparisonNodes){
 			//the "independent side" of the comparison formula
 			Expression arithmetic_expression;
-			if(cf.assignmentOnLeft){
-				arithmetic_expression = cf.right();
+			if(cf.right() instanceof BinaryExpression || cf.right() instanceof Relation){
+				arithmetic_expression = cf.left();
 			}
 			else{
-				arithmetic_expression = cf.left();
+				arithmetic_expression = cf.right();
 			}
 			cf.reduction = Reduction.DELETE;
 			//check if arithmetic_expression is a constant
