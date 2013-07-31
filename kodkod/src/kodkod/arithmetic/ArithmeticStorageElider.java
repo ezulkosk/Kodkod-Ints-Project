@@ -259,8 +259,11 @@ public class ArithmeticStorageElider implements ReturnVisitor<Node,Node,Node,Nod
 			
 		}
 		
-		public BinaryFormula visit(BinaryFormula binFormula) {
-			return new BinaryFormula((Formula)binFormula.left().accept(this), binFormula.op(), (Formula)binFormula.right().accept(this));
+		public BinaryFormula visit(final BinaryFormula bf) {
+			final Formula left = (Formula)bf.left().accept(this);
+			final Formula right = (Formula)bf.right().accept(this);
+			return (BinaryFormula) left.compose(bf.op(), right);
+//			return new BinaryFormula(left, binFormula.op(), right);
 		}
 
 		
