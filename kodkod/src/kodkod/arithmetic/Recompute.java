@@ -14,12 +14,10 @@ import kodkod.ast.Expression;
 import kodkod.ast.IntConstant;
 import kodkod.ast.IntToExprCast;
 import kodkod.ast.Node;
-import kodkod.ast.Node.Reduction;
 import kodkod.ast.Relation;
 import kodkod.ast.UnaryExpression;
 import kodkod.ast.Variable;
 import kodkod.engine.Solution;
-import kodkod.engine.bool.Int;
 import kodkod.instance.Bounds;
 import kodkod.instance.Instance;
 import kodkod.instance.Tuple;
@@ -61,9 +59,12 @@ public class Recompute {
 		for(ComparisonFormula cf: formulas)
 		{
 			Expression expr;
-			if(cf.reduction != Reduction.DELETE)
+			
+			//if(cf.reduction != Reduction.DELETE)
+			if(!IntExprReduction.reductions_delete.contains(cf))
 				continue;
-			TupleSet ts = relationTuples.get(cf.variable);
+			//TupleSet ts = relationTuples.get(cf.variable);
+			TupleSet ts = relationTuples.get(IntExprReduction.variables.get(cf));
 			ArrayList<TemporaryTuple> temps = new ArrayList<TemporaryTuple>();
 			if(ts != null){
 				Iterator<Tuple> itr = ts.iterator();
@@ -73,15 +74,15 @@ public class Recompute {
 					//System.out.println(tuple);
 					Relation rightMostRelation = null;
 					Tuple rightMostTuple = null;
-					if(cf.assignmentOnLeft){
-						rightMostRelation = getRightMostRelation((BinaryExpression)cf.left());
-						rightMostTuple = getRightMostTuple(cf.left(), tuple);
-						expr = cf.right();
-					}
-					else{
+					if(cf.right() instanceof BinaryExpression || cf.right() instanceof Relation){
 						rightMostRelation = getRightMostRelation((BinaryExpression)cf.right());
 						rightMostTuple = getRightMostTuple(cf.right(), tuple);
 						expr = cf.left();
+					}
+					else{
+						rightMostRelation = getRightMostRelation((BinaryExpression)cf.left());
+						rightMostTuple = getRightMostTuple(cf.left(), tuple);
+						expr = cf.right();
 					}
 					if(rightMostTuple == null){
 						temps.add(new TemporaryTuple("",0));
@@ -97,20 +98,7 @@ public class Recompute {
 			{
 				Relation rightMostRelation = null;
 				Tuple rightMostTuple = null;
-				if(cf.assignmentOnLeft){
-					if(cf.left() instanceof BinaryExpression){
-						rightMostRelation = getRightMostRelation((BinaryExpression)cf.left());
-						rightMostTuple = getRightMostTuple(cf.left(), null);
-						expr = cf.right();
-					}
-					else
-					{
-						rightMostRelation = (Relation)cf.left();
-						rightMostTuple = getRightMostTuple(cf.left(), null);
-						expr = cf.right();
-					}
-				}
-				else{
+				if(cf.right() instanceof BinaryExpression || cf.right() instanceof Relation){
 					if(cf.right() instanceof BinaryExpression){
 						rightMostRelation = getRightMostRelation((BinaryExpression)cf.right());
 						rightMostTuple = getRightMostTuple(cf.right(), null);
@@ -121,6 +109,19 @@ public class Recompute {
 						rightMostRelation = (Relation)cf.right();
 						rightMostTuple = getRightMostTuple(cf.right(), null);
 						expr = cf.left();
+					}
+				}
+				else{
+					if(cf.left() instanceof BinaryExpression){
+						rightMostRelation = getRightMostRelation((BinaryExpression)cf.left());
+						rightMostTuple = getRightMostTuple(cf.left(), null);
+						expr = cf.right();
+					}
+					else
+					{
+						rightMostRelation = (Relation)cf.left();
+						rightMostTuple = getRightMostTuple(cf.left(), null);
+						expr = cf.right();
 					}
 				}
 				
