@@ -1,7 +1,6 @@
 package kodkod.arithmetic;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 import kodkod.ast.BinaryExpression;
 import kodkod.ast.BinaryFormula;
@@ -228,13 +227,15 @@ public class ArithmeticStorageElider implements ReturnVisitor<Node,Node,Node,Nod
 
 		
 		public Formula visit(IntComparisonFormula n) {
-			Formula newFormula = null;
 			if(n.reduction == Reduction.INTCOMPARISON ){
 				replace = Replace.INTCOMPARISON;
-				newFormula = new IntComparisonFormula((IntExpression)n.left().accept(this), n.op(), (IntExpression)n.right().accept(this));
+				final IntExpression newIE = (IntExpression)((IntExpression)n.left().accept(this));
+				final Formula newFormula = newIE.compare(n.op(), (IntExpression)n.right().accept(this));
 				replace = Replace.FALSE;
+				return newFormula;
+			} else {
+				return null;
 			}
-			return newFormula;
 		}
 
 		public QuantifiedFormula visit(QuantifiedFormula quantFormula) {	
