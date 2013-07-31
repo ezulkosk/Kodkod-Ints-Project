@@ -16,12 +16,13 @@ import kodkod.ast.Relation;
 import kodkod.ast.operator.ExprCastOperator;
 import kodkod.ast.operator.ExprCompOperator;
 import kodkod.ast.visitor.AbstractVoidVisitor;
+import kodkod.util.collections.IdentityHashSet;
 
 //Traverses the tree marking equality and inequality nodes 
 public class EqualityFinder extends AbstractVoidVisitor {
 
-	public HashSet<ComparisonFormula> comparisonNodes = new HashSet<ComparisonFormula>();
-	public HashSet<IntComparisonFormula> intComparisonNodes = new HashSet<IntComparisonFormula>();
+	public IdentityHashSet<ComparisonFormula> comparisonNodes = new IdentityHashSet<ComparisonFormula>();
+	public IdentityHashSet<IntComparisonFormula> intComparisonNodes = new IdentityHashSet<IntComparisonFormula>();
 	
 	
 	public String quantVariable;
@@ -32,8 +33,8 @@ public class EqualityFinder extends AbstractVoidVisitor {
 	
 	public EqualityFinder()
 	{
-		comparisonNodes = new HashSet<ComparisonFormula>();
-		intComparisonNodes = new HashSet<IntComparisonFormula>();
+		comparisonNodes = new IdentityHashSet<ComparisonFormula>();
+		intComparisonNodes = new IdentityHashSet<IntComparisonFormula>();
 	}
 	/*
 	public static void callByType(Object f)

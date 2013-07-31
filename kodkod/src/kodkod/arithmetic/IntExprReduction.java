@@ -2,6 +2,7 @@ package kodkod.arithmetic;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 
 import kodkod.ast.BinaryExpression;
 import kodkod.ast.ComparisonFormula;
@@ -19,7 +20,6 @@ import kodkod.engine.satlab.SATFactory;
 import kodkod.instance.Bounds;
 import kodkod.instance.TupleFactory;
 import kodkod.instance.Universe;
-import kodkod.util.collections.FixedMap;
 import kodkod.util.collections.IdentityHashSet;
 
 public final class IntExprReduction {
@@ -50,10 +50,10 @@ public final class IntExprReduction {
 	static IdentityHashSet<Node> reductions_intConstant = new IdentityHashSet<Node>();
 	
 	//***** is there any problem with using a regular hashmap?
-	static HashMap<Node, String> answers = new HashMap<Node, String>();
+	static IdentityHashMap<Node, String> answers = new IdentityHashMap<Node, String>();
 	//can the second type param be changed to Expression?
-	static HashMap<Node, Node> variables = new HashMap<Node, Node>();
-	static HashMap<Node, Expression> equalExpressions = new HashMap<Node, Expression>();
+	static IdentityHashMap<Node, Node> variables = new IdentityHashMap<Node, Node>();
+	static IdentityHashMap<Node, Expression> equalExpressions = new IdentityHashMap<Node, Expression>();
 	
 	//adds AST node to proper reductions set, making sure to remove it from any others first
 	//the removal checks can be deleted eventually
@@ -82,8 +82,8 @@ public final class IntExprReduction {
 			Formula f = formulas[i];
 			EqualityFinder equalityFinder = new EqualityFinder();
 			f.accept(equalityFinder);
-			HashSet<ComparisonFormula> currentComparisonNodes = equalityFinder.comparisonNodes;
-			HashSet<IntComparisonFormula> currentInequalityNodes = equalityFinder.intComparisonNodes;
+			IdentityHashSet<ComparisonFormula> currentComparisonNodes = equalityFinder.comparisonNodes;
+			IdentityHashSet<IntComparisonFormula> currentInequalityNodes = equalityFinder.intComparisonNodes;
 			createNewTree[i] = !(currentComparisonNodes.isEmpty() && currentInequalityNodes.isEmpty());
 			comparisonNodes.addAll(currentComparisonNodes);
 			intComparisonNodes.addAll(currentInequalityNodes);
