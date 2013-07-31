@@ -238,18 +238,20 @@ public class ArithmeticStorageElider implements ReturnVisitor<Node,Node,Node,Nod
 			}
 		}
 
-		public QuantifiedFormula visit(QuantifiedFormula quantFormula) {	
-			Decls decls = quantFormula.decls();
-			Decl d = decls.get(0);
+		public QuantifiedFormula visit(final QuantifiedFormula qf) {	
+			final Decls decls = qf.decls();
+			final Decl d = decls.get(0);
 			multiplicity = d.multiplicity().toString();
 			quantVariable = d.variable();
 			quantExpression = d.expression().toString();
-			QuantifiedFormula q = new QuantifiedFormula(quantFormula.quantifier(), 
-					quantFormula.decls(), (Formula)quantFormula.formula().accept(this));
+			final Formula f2 = (Formula)qf.formula().accept(this);
+			final QuantifiedFormula qf2 = (QuantifiedFormula) f2.quantify(qf.quantifier(), decls);
+//			QuantifiedFormula q = new QuantifiedFormula(quantFormula.quantifier(), 
+//					quantFormula.decls(), (Formula)quantFormula.formula().accept(this));
 			multiplicity = null;
 			quantVariable = null;
 			quantExpression = null;
-			return q;
+			return qf2;
 		}
 		
 		public NaryFormula visit(NaryFormula formula) {
