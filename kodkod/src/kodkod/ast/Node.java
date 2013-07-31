@@ -37,16 +37,8 @@ import kodkod.ast.visitor.VoidVisitor;
  * @author Emina Torlak
  */
 public abstract class Node {
-	public enum Reduction{
-		DELETE,
-		REPLACE,
-		SWAPVARIABLES,
-		NONE, 
-		COMPARISON, EQUALEXPRESSIONS,INTCOMPARISON, INTCONSTANT
-	};
+	
 	public Expression equalExpression = null;
-    public Reduction reduction = Reduction.NONE;
-    public boolean isIntExpr = false;
     public boolean assignmentOnLeft = true;
     /**
      * Accepts the given visitor and returns the result

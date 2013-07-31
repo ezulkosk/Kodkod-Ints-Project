@@ -1,7 +1,6 @@
 package kodkod.arithmetic;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 import kodkod.ast.BinaryExpression;
 import kodkod.ast.BinaryFormula;
@@ -26,7 +25,6 @@ import kodkod.ast.NaryExpression;
 import kodkod.ast.NaryFormula;
 import kodkod.ast.NaryIntExpression;
 import kodkod.ast.Node;
-import kodkod.ast.Node.Reduction;
 import kodkod.ast.NotFormula;
 import kodkod.ast.ProjectExpression;
 import kodkod.ast.QuantifiedFormula;
@@ -229,7 +227,8 @@ public class ArithmeticStorageElider implements ReturnVisitor<Node,Node,Node,Nod
 		
 		public Formula visit(IntComparisonFormula n) {
 			Formula newFormula = null;
-			if(n.reduction == Reduction.INTCOMPARISON ){
+			//if(n.reduction == Reduction.INTCOMPARISON ){
+			if(IntExprReduction.reductions_intComparison.contains(n)){
 				replace = Replace.INTCOMPARISON;
 				newFormula = new IntComparisonFormula((IntExpression)n.left().accept(this), n.op(), (IntExpression)n.right().accept(this));
 				replace = Replace.FALSE;
@@ -275,19 +274,21 @@ public class ArithmeticStorageElider implements ReturnVisitor<Node,Node,Node,Nod
 		
 		public Formula visit(ComparisonFormula n) {
 			Formula newFormula;
-			if(n.reduction == Reduction.DELETE){ //|| n.reduction == Reduction.INTCONSTANT){
+			//if(n.reduction == Reduction.DELETE){ //|| n.reduction == Reduction.INTCONSTANT){
+			if(IntExprReduction.reductions_delete.contains(n)){
 				return Formula.constant(true);
 			}
-			else if(n.reduction == Reduction.INTCONSTANT)
-			{
+			//else if(n.reduction == Reduction.INTCONSTANT)
+			else if(IntExprReduction.reductions_intConstant.contains(n)){
 				return n;
 			}
-			else if(n.reduction == Reduction.EQUALEXPRESSIONS){
+			//else if(n.reduction == Reduction.EQUALEXPRESSIONS){
+			else if(IntExprReduction.reductions_equalExpressions.contains(n)){
 				ComparisonFormula tempForm = (ComparisonFormula)n;
 				return new ComparisonFormula(tempForm.right(), tempForm.op(), tempForm.equalExpression);
 			}
-			else if( n.reduction == Reduction.COMPARISON)
-			{
+			//else if( n.reduction == Reduction.COMPARISON)
+			else if(IntExprReduction.reductions_comparison.contains(n)){
 				replace = Replace.COMPARISON;
 				newFormula = new ComparisonFormula((Expression)n.left().accept(this), n.op(), (Expression)n.right());
 				replace = Replace.FALSE;

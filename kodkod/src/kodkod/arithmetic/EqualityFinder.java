@@ -100,7 +100,7 @@ public class EqualityFinder extends AbstractVoidVisitor {
 	{
 		f.left().accept(this);
 		f.right().accept(this);
-		if(f.op() == ExprCompOperator.EQUALS && (f.left().isIntExpr || f.right().isIntExpr)){
+		if(f.op() == ExprCompOperator.EQUALS && (f.left() instanceof IntToExprCast || f.right() instanceof IntToExprCast)){
 			
 			
 			if(f.left() instanceof BinaryExpression || f.left() instanceof Relation){ // && ((BinaryExpression)f.left()).right() instanceof Relation)
@@ -151,7 +151,6 @@ public class EqualityFinder extends AbstractVoidVisitor {
 	}
 	
 	public void visit(IntToExprCast castExpr) {
-		castExpr.isIntExpr = true;
 		castExpr.intExpr().accept(this);
 	}
 	

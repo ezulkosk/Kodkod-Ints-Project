@@ -2,7 +2,6 @@ package kodkod.arithmetic;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import kodkod.ast.ComparisonFormula;
 import kodkod.ast.Expression;
@@ -10,8 +9,7 @@ import kodkod.ast.Formula;
 import kodkod.ast.IntComparisonFormula;
 import kodkod.ast.IntConstant;
 import kodkod.ast.IntToExprCast;
-import kodkod.ast.Node.Reduction;
-import kodkod.ast.Relation;
+import kodkod.ast.Node;
 import kodkod.engine.Solution;
 import kodkod.engine.Solver;
 import kodkod.engine.config.Options;
@@ -19,6 +17,7 @@ import kodkod.engine.satlab.SATFactory;
 import kodkod.instance.Bounds;
 import kodkod.instance.TupleFactory;
 import kodkod.instance.Universe;
+import kodkod.util.collections.IdentityHashSet;
 
 public final class IntExprReduction {
 	HashSet<String> vars = new HashSet<String>();
@@ -30,6 +29,35 @@ public final class IntExprReduction {
 	Formula modifiedTree;
 	public Formula[] oldFormulas;
 	public boolean[] createNewTree;
+	
+	/*
+	 * DELETE,
+		REPLACE,
+		SWAPVARIABLES,
+		NONE, 
+		COMPARISON, EQUALEXPRESSIONS,INTCOMPARISON, INTCONSTANT
+	 */
+	
+	static IdentityHashSet<Node> reductions_delete = new IdentityHashSet<Node>();
+	static IdentityHashSet<Node> reductions_replace = new IdentityHashSet<Node>();
+	static IdentityHashSet<Node> reductions_swapVariables = new IdentityHashSet<Node>();
+	static IdentityHashSet<Node> reductions_comparison = new IdentityHashSet<Node>();
+	static IdentityHashSet<Node> reductions_equalExpressions = new IdentityHashSet<Node>();
+	static IdentityHashSet<Node> reductions_intComparison = new IdentityHashSet<Node>();
+	static IdentityHashSet<Node> reductions_intConstant = new IdentityHashSet<Node>();
+	
+	//adds AST node to proper reductions set, making sure to remove it from any others first
+	//the removal checks can be deleted eventually
+	public void addReduction(Node n, IdentityHashSet<Node> set){
+		reductions_delete.remove(n);
+		reductions_replace.remove(n);
+		reductions_swapVariables.remove(n);
+		reductions_comparison.remove(n);
+		reductions_equalExpressions.remove(n);
+		reductions_intComparison.remove(n);
+		reductions_intConstant.remove(n);
+		set.add(n);
+	}
 	
 	public Formula[] reduceIntExpressions(Formula...formulas)
 	{
@@ -54,25 +82,29 @@ public final class IntExprReduction {
 			else{
 				arithmetic_expression = cf.left();
 			}
-			cf.reduction = Reduction.DELETE;
+			//cf.reduction = Reduction.DELETE;
+			addReduction(cf, reductions_delete);
 			//check if arithmetic_expression is a constant
 			if(arithmetic_expression instanceof IntToExprCast)
 				if(((IntToExprCast)arithmetic_expression).intExpr() instanceof IntConstant)
 				{
-					cf.reduction = Reduction.INTCONSTANT;
+					//cf.reduction = Reduction.INTCONSTANT;
+					addReduction(cf, reductions_intConstant);
 					swapAnswerPairs.put(cf.answer, arithmetic_expression);
 					continue;
 				}
 			
 			if(swapAnswerPairs.containsKey(cf.answer)){
 				cf.equalExpression = swapAnswerPairs.get(cf.answer);
-				cf.reduction=Reduction.EQUALEXPRESSIONS;
+				//cf.reduction=Reduction.EQUALEXPRESSIONS;
+				addReduction(cf, reductions_equalExpressions);
 			}
 			swapAnswerPairs.put(cf.answer, arithmetic_expression);
 			bogusVariables.add(cf.answer);
 		}
 		for(IntComparisonFormula icf : intComparisonNodes){
-			icf.reduction = Reduction.INTCOMPARISON;
+			//icf.reduction = Reduction.INTCOMPARISON;
+			addReduction(icf, reductions_intComparison);
 		}
 		int count = 0;
 

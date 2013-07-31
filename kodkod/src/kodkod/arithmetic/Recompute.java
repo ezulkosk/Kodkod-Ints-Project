@@ -14,12 +14,10 @@ import kodkod.ast.Expression;
 import kodkod.ast.IntConstant;
 import kodkod.ast.IntToExprCast;
 import kodkod.ast.Node;
-import kodkod.ast.Node.Reduction;
 import kodkod.ast.Relation;
 import kodkod.ast.UnaryExpression;
 import kodkod.ast.Variable;
 import kodkod.engine.Solution;
-import kodkod.engine.bool.Int;
 import kodkod.instance.Bounds;
 import kodkod.instance.Instance;
 import kodkod.instance.Tuple;
@@ -61,7 +59,8 @@ public class Recompute {
 		for(ComparisonFormula cf: formulas)
 		{
 			Expression expr;
-			if(cf.reduction != Reduction.DELETE)
+			//if(cf.reduction != Reduction.DELETE)
+			if(IntExprReduction.reductions_delete.contains(cf))
 				continue;
 			TupleSet ts = relationTuples.get(cf.variable);
 			ArrayList<TemporaryTuple> temps = new ArrayList<TemporaryTuple>();
